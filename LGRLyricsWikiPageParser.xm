@@ -11,7 +11,6 @@
 
 #import "LGRLyricsWikiPageParser.h"
 #import "LGRCommon.h"
-#import "NSString+HTML.h"
 
 @implementation LGRLyricsWikiPageParser
 
