@@ -19,6 +19,8 @@
 
 @implementation LGRController
 
+@synthesize ready = _ready;
+
 #pragma mark Now Playing
 
 /*
@@ -33,12 +35,13 @@
     // to another operation queue.
     //
     // NOTE: We use 2 queues to denote 2 different tasks:
-    //       - Tasks in _itemHandleOperationQueue handle arriving IUMediaQueryNowPlayingItem's.
+    //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
-    [_itemHandleOperationQueue addOperationWithBlock:^{
+    dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(global_queue, ^{
         // NOTE: Block inherits every ivar as well as local vars
-        
+
         // If the song already has lyrics, return.
         if ([item hasDisplayableText])
             return;
@@ -57,13 +60,33 @@
             if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
                 return;
 
+        DebugLog(@"Starting handler for song: %@ by %@", title, artist);
+
         // Start a new task to fetch the lyrics
         LGRLyricsOperation *operation = [LGRLyricsOperation operation];
         operation.title = title;
         operation.artist = artist;
         operation.nowPlayingItem = item;
         [_lyricsFetchOperationQueue addOperation:operation];
-    }];
+    });
+}
+
+/*
+ * Functions: Update reference to _currentInfoOverlay
+ * Note     : This MPPortraitInfoOverlay instance provides a bridge between our tweak and
+ *            the now playing UI. In particular, we need a reference to this instance to
+ *            update the UI whenever we fetch new lyrics for a song currently played.
+ */
+- (void)setCurrentInfoOverlay:(MPPortraitInfoOverlay *)overlay
+{
+    [self ridCurrentInfoOverlay];
+    _currentInfoOverlay = [overlay retain];
+}
+
+- (void)ridCurrentInfoOverlay
+{
+    [_currentInfoOverlay release];
+    _currentInfoOverlay = nil;
 }
 
 #pragma mark Lyrics
@@ -114,24 +137,6 @@
         }];
 }
 
-/*
- * Functions: Update _currentInfoOverlay
- * Note     : This MPPortraitInfoOverlay instance provides a bridge between our tweak and
- *            the now playing UI. In particular, we need a reference to this instance to
- *            update the UI whenever we fetch new lyrics for a song currently played.
- */
-- (void)setCurrentInfoOverlay:(MPPortraitInfoOverlay *)overlay
-{
-    [self ridCurrentInfoOverlay];
-    _currentInfoOverlay = [overlay retain];
-}
-
-- (void)ridCurrentInfoOverlay
-{
-    [_currentInfoOverlay release];
-    _currentInfoOverlay = nil;
-}
-
 #pragma mark Singleton
 /*
  * These functions are necessary for a singleton.
@@ -153,9 +158,9 @@
 {
     if ((self = [super init]))
     {
-        _itemHandleOperationQueue = [[NSOperationQueue alloc] init]; 
         _lyricsFetchOperationQueue = [[NSOperationQueue alloc] init];
         _lyricsWrappers = [[NSMutableArray alloc] init];
+        _ready = NO;
     }
     return self;
 }
@@ -194,7 +199,6 @@
  */
 - (void)dealloc
 {
-    [_itemHandleOperationQueue release];
     [_lyricsFetchOperationQueue release];
     [_lyricsWrappers release];
     

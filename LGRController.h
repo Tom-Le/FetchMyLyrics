@@ -12,12 +12,15 @@
 @class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay, LGRLyricsWrapper, LGRLyricsOperation;
 
 @interface LGRController : NSObject {
-    NSOperationQueue *_itemHandleOperationQueue;
     NSOperationQueue *_lyricsFetchOperationQueue;
     NSMutableArray *_lyricsWrappers;
 
     MPPortraitInfoOverlay *_currentInfoOverlay;
+
+    BOOL _ready;
 }
+
+@property (nonatomic, readonly, getter=isReady) BOOL ready;
 
 - (void)handleSongWithNowPlayingItem:(IUMediaQueryNowPlayingItem *)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
