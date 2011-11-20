@@ -1,0 +1,9 @@
+Package: com.uglycathasnodomain.lyricsgrabber
+Name: LyricsGrabber
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Tom Cat
+Author: Tom Cat
+Section: Tweaks

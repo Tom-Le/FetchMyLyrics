@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+make
+scp -P 2222 obj/LyricsGrabber.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
+echo "Respringing..."
+ssh -p 2222 -l root localhost killall SpringBoard
