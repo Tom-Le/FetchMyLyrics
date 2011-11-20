@@ -31,7 +31,7 @@
     // I don't even know why this method's return type is BOOL,
     // what a load of BOOLcrap.
 
-    [LGRController sharedController];
+    [[LGRController sharedController] setup];
 
     return %orig;
 }

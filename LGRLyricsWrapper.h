@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LGRLyricsWrapper : NSObject {
+@interface LGRLyricsWrapper : NSObject <NSCoding> {
     NSString *_title;
     NSString *_artist;
     NSString *_lyrics;

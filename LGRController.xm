@@ -17,9 +17,9 @@
 #import "LGRLyricsWrapper.h"
 #import "LGRLyricsOperation.h"
 
-@implementation LGRController
+#define LGRLyricsStorageFilePath @"~/Library/LyricsGrabber/storage"
 
-@synthesize ready = _ready;
+@implementation LGRController
 
 #pragma mark Now Playing
 
@@ -38,37 +38,38 @@
     //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
-    dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(global_queue, ^{
-        // NOTE: Block inherits every ivar as well as local vars
+    if (_ready)
+    {
+        dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(global_queue, ^{
+            // NOTE: Block inherits every ivar as well as local vars
 
-        // If the song already has lyrics, return.
-        if ([item hasDisplayableText])
-            return;
- 
-        // Song info
-        NSString *title = [[item mediaItem] valueForProperty:@"title"];
-        NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
-
-        // If LGRController already has lyrics for the song, return.
-        for (LGRLyricsWrapper *lw in _lyricsWrappers)
-            if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
+            // If the song already has lyrics, return.
+            if ([item hasDisplayableText])
                 return;
+     
+            // Song info
+            NSString *title = [[item mediaItem] valueForProperty:@"title"];
+            NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
 
-        // If a task is already running for the song requested, return.
-        for (LGRLyricsOperation *lo in [_lyricsFetchOperationQueue operations])
-            if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
-                return;
+            // If LGRController already has lyrics for the song, return.
+            for (LGRLyricsWrapper *lw in _lyricsWrappers)
+                if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
+                    return;
 
-        DebugLog(@"Starting handler for song: %@ by %@", title, artist);
+            // If a task is already running for the song requested, return.
+            for (LGRLyricsOperation *lo in [_lyricsFetchOperationQueue operations])
+                if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
+                    return;
 
-        // Start a new task to fetch the lyrics
-        LGRLyricsOperation *operation = [LGRLyricsOperation operation];
-        operation.title = title;
-        operation.artist = artist;
-        operation.nowPlayingItem = item;
-        [_lyricsFetchOperationQueue addOperation:operation];
-    });
+            // Start a new task to fetch the lyrics
+            LGRLyricsOperation *operation = [LGRLyricsOperation operation];
+            operation.title = title;
+            operation.artist = artist;
+            operation.nowPlayingItem = item;
+            [_lyricsFetchOperationQueue addOperation:operation];
+        });
+    }
 }
 
 /*
@@ -95,11 +96,14 @@
  */
 - (NSString *)lyricsForSongWithTitle:(NSString *)title artist:(NSString *)artist
 {
-    for (LGRLyricsWrapper *lw in _lyricsWrappers)
-        if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
-            return lw.lyrics;
+    if (_ready)
+    {
+        for (LGRLyricsWrapper *lw in _lyricsWrappers)
+            if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
+                return lw.lyrics;
+    }
 
-    // Found nothing, return nothing.
+    // Found nothing or wasn't ready
     return nil;
 }
 
@@ -108,33 +112,91 @@
  */
 - (void)operationReportsAvailableLyrics:(LGRLyricsOperation *)operation
 {
-    // Prevent duplicates
-    BOOL duplicate = NO;
-    for (LGRLyricsWrapper *lw in _lyricsWrappers)
-        if ([lw.title isEqualToString:operation.title] && [lw.artist isEqualToString:operation.artist]) 
+    if (_ready)
+    {
+        // Prevent duplicates
+        BOOL duplicate = NO;
+        for (LGRLyricsWrapper *lw in _lyricsWrappers)
+            if ([lw.title isEqualToString:operation.title] && [lw.artist isEqualToString:operation.artist]) 
+            {
+                lw.lyrics = operation.lyrics;
+                duplicate = YES;
+            }
+
+        if (!duplicate)
         {
-            lw.lyrics = operation.lyrics;
-            duplicate = YES;
+            // No duplicate found, add.
+            LGRLyricsWrapper *wrapper = [LGRLyricsWrapper lyricsWrapper];
+            wrapper.title = operation.title;
+            wrapper.artist = operation.artist;
+            wrapper.lyrics = operation.lyrics;
+            [_lyricsWrappers addObject:wrapper];
+
+            [self writeToLyricsStorageFile];
         }
 
-    if (!duplicate)
+        // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
+        NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
+        NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
+        if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [_currentInfoOverlay _updateDisplayableTextViewForItem:operation.nowPlayingItem
+                                                               animate:YES];
+            }];
+    }
+}
+
+#pragma mark Setup
+/*
+ * Function: Setup the singleton.
+ *           Load the saved lyrics, if there's any. 
+ * Note    : Return ASAP or it will take forever to start up.
+ */
+- (void)setup
+{
+    dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(global_queue, ^{
+        [self readFromLyricsStorageFile];
+
+        _ready = YES;
+    });
+}
+
+/*
+ * Functions: Read/write from/to lyrics storage file.
+ */
+- (void)readFromLyricsStorageFile
+{
+    NSMutableArray *storedWrappers;
+    @try
     {
-        // No duplicate found, add.
-        LGRLyricsWrapper *wrapper = [LGRLyricsWrapper lyricsWrapper];
-        wrapper.title = operation.title;
-        wrapper.artist = operation.artist;
-        wrapper.lyrics = operation.lyrics;
-        [_lyricsWrappers addObject:wrapper];
+        storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:[LGRLyricsStorageFilePath stringByExpandingTildeInPath]];
+    }
+    @catch (id e)
+    {
+        DebugLog(@"DUN DUN DUN READ EXCEPTION: %@", e);
+        storedWrappers = nil;
     }
 
-    // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
-    NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
-    NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
-    if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [_currentInfoOverlay _updateDisplayableTextViewForItem:operation.nowPlayingItem
-                                                           animate:YES];
-        }];
+    if (storedWrappers)
+    {
+        if (_lyricsWrappers)
+            [_lyricsWrappers release];
+        _lyricsWrappers = [storedWrappers retain];
+    }
+}
+
+- (void)writeToLyricsStorageFile
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:[@"~/Library/LyricsGrabber" stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[@"~/Library/LyricsGrabber" stringByExpandingTildeInPath]
+           withIntermediateDirectories:YES
+                            attributes:nil
+                                 error:nil];
+
+    [NSKeyedArchiver archiveRootObject:_lyricsWrappers
+                                toFile:[LGRLyricsStorageFilePath stringByExpandingTildeInPath]];
 }
 
 #pragma mark Singleton
@@ -201,6 +263,7 @@
 {
     [_lyricsFetchOperationQueue release];
     [_lyricsWrappers release];
+    [self ridCurrentInfoOverlay];
     
     [super dealloc];
 }

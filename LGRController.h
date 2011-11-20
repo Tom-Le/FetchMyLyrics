@@ -20,15 +20,17 @@
     BOOL _ready;
 }
 
-@property (nonatomic, readonly, getter=isReady) BOOL ready;
-
 - (void)handleSongWithNowPlayingItem:(IUMediaQueryNowPlayingItem *)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
                               artist:(NSString *)artist;
 - (void)operationReportsAvailableLyrics:(LGRLyricsOperation *)operation;
 
+- (void)readFromLyricsStorageFile;
+- (void)writeToLyricsStorageFile;
+
 - (void)setCurrentInfoOverlay:(MPPortraitInfoOverlay *)overlay;
 - (void)ridCurrentInfoOverlay;
 
 + (id)sharedController;
+- (void)setup;
 @end
