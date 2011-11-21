@@ -67,11 +67,20 @@
                     return;
 
             // Start a new task to fetch the lyrics
-            LGRLyricsWikiOperation *operation = [LGRLyricsWikiOperation operation];
-            operation.title = title;
-            operation.artist = artist;
-            operation.nowPlayingItem = item;
-            [_lyricsFetchOperationQueue addOperation:operation];
+            NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"LGROperation"];
+            LGROperation *operation;
+            if ([operationKey isEqualToString:@"LGRLyricsWikiOperation"])
+                operation = [LGRLyricsWikiOperation operation];
+            else if ([operationKey isEqualToString:@"LGRAZLyricsOperation"])
+                operation = nil; // support not yet present
+
+            if (operation)
+            {
+                operation.title = title;
+                operation.artist = artist;
+                operation.nowPlayingItem = item;
+                [_lyricsFetchOperationQueue addOperation:operation];
+            }
         });
     }
 }
