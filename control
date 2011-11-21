@@ -1,9 +1,9 @@
-Package: com.uglycathasnodomain.lyricsgrabber
-Name: LyricsGrabber
+Package: com.uglycathasnodomain.lfetcher
+Name: L'Fetcher
 Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: MobileSubstrate tweak; grabs lyrics from the web if song in Music/iPod.app has none. 
 Maintainer: Tom Cat
 Author: Tom Cat
 Section: Tweaks
