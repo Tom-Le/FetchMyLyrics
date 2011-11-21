@@ -12,6 +12,5 @@ lfetcher_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
 lfetcher_PRIVATE_FRAMEWORKS = iPodUI
 
 CFLAGS = -I./classes -I/usr/include/objc -I./headers
-LDFLAGS = -F./Frameworks -F./PrivateFrameworks
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -190,8 +190,8 @@
 - (void)writeToLyricsStorageFile
 {
     NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[@"~/Library/L'Fetcher" stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[@"~/Library/L'Fetcher" stringByExpandingTildeInPath]
+    if (![manager fileExistsAtPath:[@"~/Library/lfetcher" stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[@"~/Library/lfetcher" stringByExpandingTildeInPath]
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
