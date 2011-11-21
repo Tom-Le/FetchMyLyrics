@@ -15,7 +15,8 @@ else
 fi
 
 make
-scp -P $LGRPORTNO obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
-scp -P $LGRPORTNO lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries
+scp -P $LGRPORTNO obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $LGRPORTNO lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $LGRPORTNO Preferences/lfetcher.plist root@localhost:/Library/PreferencesLoader/Preferences/
 echo "Respringing..."
 ssh -p $LGRPORTNO -l root localhost killall SpringBoard

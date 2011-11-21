@@ -41,7 +41,8 @@
     //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
-    if (_ready)
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+    if (_ready && enabled)
     {
         dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(global_queue, ^{
@@ -99,7 +100,8 @@
  */
 - (NSString *)lyricsForSongWithTitle:(NSString *)title artist:(NSString *)artist
 {
-    if (_ready)
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+    if (_ready && enabled)
     {
         for (LGRLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
@@ -139,13 +141,18 @@
         }
 
         // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
-        NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
-        NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
-        if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [_currentInfoOverlay _updateDisplayableTextViewForItem:operation.nowPlayingItem
-                                                               animate:YES];
-            }];
+        // and only if the tweak is enabled
+        BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+        if (enabled)
+        {
+            NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
+            NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
+            if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [_currentInfoOverlay _updateDisplayableTextViewForItem:operation.nowPlayingItem
+                                                                   animate:YES];
+                }];
+        }
     }
 }
 
