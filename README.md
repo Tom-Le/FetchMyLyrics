@@ -16,3 +16,5 @@ Todo:
 1. Show a button in Now Playing view that indicates LyricsGrabber's
 status (disabled, fetching lyrics, enabled).
 2. Preferences (preferably in Settings.app, like Activator).
+3. Make a proper website for this because no one likes to be greeted
+by a bunch of files.
