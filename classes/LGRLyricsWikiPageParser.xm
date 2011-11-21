@@ -6,7 +6,7 @@
  *
  * Copyright 2011, Le Son.
  * All rights reserved.
- * Licensed under the BSD license, available here: http://bit.ly/vSZSvM
+ * Licensed under the BSD license, included with the source.
  ******************************************************************************/
 
 #import "LGRLyricsWikiPageParser.h"
