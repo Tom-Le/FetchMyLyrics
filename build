@@ -5,6 +5,7 @@
 # iDevice (otherwise it would ask for your password every time and that would
 # be a pain in the ass.
 make
-scp -P 2222 obj/LyricsGrabber.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
+scp -P 2222 obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
+scp -P 2222 lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries
 echo "Respringing..."
 ssh -p 2222 -l root localhost killall SpringBoard

@@ -118,7 +118,12 @@
         [APIParser beginParsing];
         
         // Busy waiting (won't lock up the UI, we're on a separate thread, so don't look so scared)
-        while (!APIParser.done) {}
+        while (!APIParser.done)
+        {
+            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+                return;
+            [NSThread sleepForTimeInterval:0.2];
+        }
         
         // Grab the URL
         NSString *URLStringToLyricsPage = [[APIParser.URLStringToLyricsPage copy] autorelease];
@@ -139,7 +144,12 @@
         [pageParser beginParsing];
 
         // Busy waiting
-        while (!pageParser.done) {}
+        while (!pageParser.done)
+        {
+            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+                return;
+            [NSThread sleepForTimeInterval:0.2];
+        }
 
         // Grab the lyrics (woooooo)
         if (pageParser.lyrics)

@@ -101,7 +101,7 @@
     {
         for (LGRLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
-                return lw.lyrics;
+                return [lw.lyrics stringByAppendingString:@"\n\n[ Fetched by L'Fetcher ]"];
     }
 
     // Found nothing or wasn't ready

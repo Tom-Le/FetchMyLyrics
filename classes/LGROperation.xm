@@ -75,6 +75,7 @@
     self.title = nil;
     self.artist = nil;
     self.lyrics = nil;
+    self.nowPlayingItem = nil;
 
     [super dealloc];
 }

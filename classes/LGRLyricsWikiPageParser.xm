@@ -125,4 +125,10 @@
     _done = YES;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    _lyrics = nil;
+    _done = YES;
+}
+
 @end
