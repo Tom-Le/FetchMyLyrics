@@ -1,6 +1,6 @@
 /*******************************************************************************
  * LGRCommon.h 
- * iPodLyrics
+ * L'Fetcher
  *
  * Copyright 2011, Le Son.
  * All rights reserved.
@@ -9,4 +9,4 @@
 
 // For debugging (because they say NSLog is synchronous and all)
 #define DEBUG_MSG 1
-#define DebugLog(fmt, ...) if (DEBUG_MSG == 1) NSLog((@"iPodLyrics: " fmt), ##__VA_ARGS__)
+#define DebugLog(fmt, ...) if (DEBUG_MSG == 1) NSLog((@"L'Fetcher: " fmt), ##__VA_ARGS__)

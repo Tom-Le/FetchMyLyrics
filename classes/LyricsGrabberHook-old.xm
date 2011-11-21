@@ -38,7 +38,7 @@
 - (void)application:(id)app didFinishLaunchingWithOptions:(id)opt
 {
     if (DEBUG_ENABLE)
-        NSLog(@"iPodLyrics: I am in.");
+        NSLog(@"L'Fetcher: I am in.");
     %orig;
 }
 
@@ -76,10 +76,10 @@
         {
             NSString *song = [[item mediaItem] valueForProperty:@"title"];
             NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
-            NSLog(@"iPodLyrics: Going to play \"%@\" by \"%@\".", song, artist);
+            NSLog(@"L'Fetcher: Going to play \"%@\" by \"%@\".", song, artist);
 
             BOOL hasLyrics = [item hasDisplayableText];
-            NSLog(@"iPodLyrics: Song has lyrics = %i", hasLyrics);
+            NSLog(@"L'Fetcher: Song has lyrics = %i", hasLyrics);
         }
     }
 
@@ -103,11 +103,11 @@
 //        NSString *artist = [[item performSelector:@selector(mediaItem)]
 //                                performSelector:@selector(valueForProperty:)
 //                                     withObject:@"artist"];
-//        NSLog(@"iPodLyrics: Going to play \"%@\" by \"%@\".", song, artist);
+//        NSLog(@"L'Fetcher: Going to play \"%@\" by \"%@\".", song, artist);
 //
 //        BOOL (*HasDisplayableTextSender)(id, SEL) = (BOOL (*)(id, SEL)) objc_msgSend;
 //        BOOL hasLyrics = HasDisplayableTextSender(item, @selector(hasDisplayableText));
-//        NSLog(@"iPodLyrics: Song has lyrics = %i", hasLyrics);
+//        NSLog(@"L'Fetcher: Song has lyrics = %i", hasLyrics);
 //    }
 //
 //    %orig;
@@ -123,13 +123,13 @@
 //    {
 //        if ([(NSString *)property isEqualToString:@"lyrics"])
 //        {
-//            NSLog(@"iPodLyrics: MPConcreteMediaItem valueForProperty: =========START=========");
+//            NSLog(@"L'Fetcher: MPConcreteMediaItem valueForProperty: =========START=========");
 //            NSArray *syms = [NSThread callStackSymbols];
 //            if ([syms count] > 1)
-//                NSLog(@"iPodLyrics: MPConcreteMediaItem valueForProperty: caller = %@", [syms objectAtIndex:1U]);
+//                NSLog(@"L'Fetcher: MPConcreteMediaItem valueForProperty: caller = %@", [syms objectAtIndex:1U]);
 //
 //            id returnValue = %orig;
-//            NSLog(@"iPodLyrics: MPConcreteMediaItem valueForProperty: ==========END==========");
+//            NSLog(@"L'Fetcher: MPConcreteMediaItem valueForProperty: ==========END==========");
 //            return returnValue;
 //
 //            //if (lyrics == nil)
@@ -155,12 +155,12 @@
 //
 //- (void)setValue:(id)value forProperty:(id)property
 //{
-//    NSLog(@"iPodLyrics: MPConcreteMediaItem setValue:forProperty: =========START=========");
+//    NSLog(@"L'Fetcher: MPConcreteMediaItem setValue:forProperty: =========START=========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPConcreteMediaItem setValue:forProperty: caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: MPConcreteMediaItem setValue:forProperty: caller = %@", [syms objectAtIndex:1U]);
 //    %orig;
-//    NSLog(@"iPodLyrics: MPConcreteMediaItem setValue:forProperty: ==========END==========");
+//    NSLog(@"L'Fetcher: MPConcreteMediaItem setValue:forProperty: ==========END==========");
 //}
 //
 //%end
@@ -170,31 +170,31 @@
 //- (void)_updateAllItemDependenciesForItem:(id)item
 //                                  animate:(BOOL)animate
 //{
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateAll... =========START==========");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateAll... =========START==========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateAll... caller = %@", [syms objectAtIndex:1U]);
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateAll... item = %@", item);
+//        NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateAll... caller = %@", [syms objectAtIndex:1U]);
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateAll... item = %@", item);
 //
 //    %orig;
 //
 //    if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(item)]])
 //    {
-//        NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateAll... has lyrics = %i", [item performSelector:@selector(hasDisplayableText)]); 
+//        NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateAll... has lyrics = %i", [item performSelector:@selector(hasDisplayableText)]); 
 //    }
 //
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateAll... ==========END===========");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateAll... ==========END===========");
 //}
 
 //- (void)setItem:(id)item
 //{
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay setItem: *********START*********");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay setItem: *********START*********");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPPortraitInfoOverlay setItem: caller = %@", [syms objectAtIndex:1U]);
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay setItem: item = %@", item);
+//        NSLog(@"L'Fetcher: MPPortraitInfoOverlay setItem: caller = %@", [syms objectAtIndex:1U]);
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay setItem: item = %@", item);
 //    %orig;
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay setItem: ==========END==========");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay setItem: ==========END==========");
 
 //    if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(item)]])
 //    {
@@ -204,7 +204,7 @@
 //        NSString *artist = [[item performSelector:@selector(mediaItem)]
 //                                performSelector:@selector(valueForProperty:)
 //                                     withObject:@"artist"];
-//        NSLog(@"iPodLyrics: Going to play \"%@\" by \"%@\".", song, artist);
+//        NSLog(@"L'Fetcher: Going to play \"%@\" by \"%@\".", song, artist);
 //    }
 //
 //    %orig;
@@ -215,28 +215,28 @@
 //{
 //    NSArray *syms = [NSThread callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: caller = %@", [syms objectAtIndex:1U]);
 //    if ([item respondsToSelector:@selector(hasDisplayableText)])
-//        NSLog(@"iPodLyrics: item has displayable text = %i", [item performSelector:@selector(hasDisplayableText)]);
+//        NSLog(@"L'Fetcher: item has displayable text = %i", [item performSelector:@selector(hasDisplayableText)]);
 //    %orig;
 
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateDisp... *********START*********");
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateDisp... item = %@", item);
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateDisp... *********START*********");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateDisp... item = %@", item);
 //
 //    if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(item)]])
 //    {
-//        NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateDisp... has lyrics = %i", [item performSelector:@selector(hasDisplayableText)]); 
+//        NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateDisp... has lyrics = %i", [item performSelector:@selector(hasDisplayableText)]); 
 //    }
 //
 //    %orig;
 //
-//    NSLog(@"iPodLyrics: MPPortraitInfoOverlay _updateDisp... ==========END===========");
+//    NSLog(@"L'Fetcher: MPPortraitInfoOverlay _updateDisp... ==========END===========");
 
 //    if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(item)]])
 //    {
 //        BOOL (*HasDisplayableTextSender)(id, SEL) = (BOOL (*)(id, SEL)) objc_msgSend;
 //        BOOL hasLyrics = HasDisplayableTextSender(item, @selector(hasDisplayableText));
-//        NSLog(@"iPodLyrics: Song has lyrics = %i", hasLyrics);
+//        NSLog(@"L'Fetcher: Song has lyrics = %i", hasLyrics);
 //    }
 //
 //    %orig;
@@ -244,7 +244,7 @@
 //
 //- (void)_displayableTextAvailable:(id)arg
 //{
-//    NSLog(@"iPodLyrics: arg = %@", arg);
+//    NSLog(@"L'Fetcher: arg = %@", arg);
 //    %orig;
 //}
 
@@ -254,24 +254,24 @@
 //
 //- (id)displayableText
 //{
-//    NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem displayableText =========START=========");
+//    NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem displayableText =========START=========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem displayableText caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem displayableText caller = %@", [syms objectAtIndex:1U]);
 //    id returnValue = %orig;
-//    NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem displayableText ==========END==========");
+//    NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem displayableText ==========END==========");
 //    return returnValue;
 //}
 //
 //- (BOOL)hasDisplayableText
 //{
-//    NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem hasDisplayableText =========START=========");
+//    NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem hasDisplayableText =========START=========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem hasDisplayableText caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem hasDisplayableText caller = %@", [syms objectAtIndex:1U]);
 //    BOOL returnValue = (BOOL)%orig;
-//    NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem hasDisplayableText = %@", [NSNumber numberWithBool:returnValue]);
-//    NSLog(@"iPodLyrics: IUMediaQueryNowPlayingItem hasDisplayableText ==========END==========");
+//    NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem hasDisplayableText = %@", [NSNumber numberWithBool:returnValue]);
+//    NSLog(@"L'Fetcher: IUMediaQueryNowPlayingItem hasDisplayableText ==========END==========");
 //    return returnValue;
 //}
 //
@@ -285,16 +285,16 @@
 //                        change:(NSDictionary *)change
 //                       context:(void *)context
 //{
-//    NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder observe... =========START=========");
+//    NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder observe... =========START=========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder observe... caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder observe... caller = %@", [syms objectAtIndex:1U]);
 //
-//    NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder keyPath = %@", keyPath);
-//    NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder object = %@", object);
-//    NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder change = %@", change);
+//    NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder keyPath = %@", keyPath);
+//    NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder object = %@", object);
+//    NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder change = %@", change);
 //    %orig;
-//    NSLog(@"iPodLyrics: MPAVQueuePlayerFeeder observe... ==========END==========");
+//    NSLog(@"L'Fetcher: MPAVQueuePlayerFeeder observe... ==========END==========");
 //}
 //
 //%end
@@ -303,12 +303,12 @@
 //
 //- (NSString *)lyrics
 //{
-//    NSLog(@"iPodLyrics: MPAVItem lyrics =========START=========");
+//    NSLog(@"L'Fetcher: MPAVItem lyrics =========START=========");
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPAVItem lyrics: caller = %@", [syms objectAtIndex:1U]);
+//        NSLog(@"L'Fetcher: MPAVItem lyrics: caller = %@", [syms objectAtIndex:1U]);
 //    NSString *returnValue = %orig;
-//    NSLog(@"iPodLyrics: MPAVItem lyrics ==========END==========");
+//    NSLog(@"L'Fetcher: MPAVItem lyrics ==========END==========");
 //    return returnValue;
 //}
 //
@@ -320,8 +320,8 @@
 //{
 //    NSArray *syms = [NSThread  callStackSymbols];
 //    if ([syms count] > 1)
-//        NSLog(@"iPodLyrics: MPTextView setText:willLoad: caller = %@", [syms objectAtIndex:1U]);
-//    NSLog(@"iPodLyrics: MPTextView willLoad:%@ text:%@", [NSNumber numberWithBool:wl], text);
+//        NSLog(@"L'Fetcher: MPTextView setText:willLoad: caller = %@", [syms objectAtIndex:1U]);
+//    NSLog(@"L'Fetcher: MPTextView willLoad:%@ text:%@", [NSNumber numberWithBool:wl], text);
 //    %orig;
 //}
 //

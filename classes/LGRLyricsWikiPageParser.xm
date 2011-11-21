@@ -1,6 +1,6 @@
 /*******************************************************************************
  * LGRLyricsWikiPageParser.xm
- * iPodLyrics
+ * L'Fetcher
  *
  * NOTE: This class is HIGHLY error prone.
  *
