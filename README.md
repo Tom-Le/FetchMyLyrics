@@ -3,6 +3,10 @@ Internet. Compatible with iOS 5. (Working on compatibility with iOS 4.)
 Roughly tested on a third generation iPod touch (my iPod). Downloaded
 lyrics are saved to `/private/var/mobile/Library/LyricsGrabber/storage`.
 
+Note: "LyricsGrabber" is not really its official name (I am aware that
+many other programs/apps have been made with this name). Not an English
+major, help? :-(
+
 Compilation notes:
 ------------------
 - Need `MediaPlayer.framework` (public) and `iPodUI.framework` (private).
