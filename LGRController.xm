@@ -15,7 +15,8 @@
 #import <MediaPlayer/MPPortraitInfoOverlay.h>
 #import <MediaPlayer/MPAVItem.h>
 #import "LGRLyricsWrapper.h"
-#import "LGRLyricsOperation.h"
+#import "LGROperation.h"
+#import "LGRLyricsWikiOperation.h"
 
 #define LGRLyricsStorageFilePath @"~/Library/LyricsGrabber/storage"
 
@@ -58,12 +59,12 @@
                     return;
 
             // If a task is already running for the song requested, return.
-            for (LGRLyricsOperation *lo in [_lyricsFetchOperationQueue operations])
+            for (LGRLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
                 if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
                     return;
 
             // Start a new task to fetch the lyrics
-            LGRLyricsOperation *operation = [LGRLyricsOperation operation];
+            LGRLyricsWikiOperation *operation = [LGRLyricsWikiOperation operation];
             operation.title = title;
             operation.artist = artist;
             operation.nowPlayingItem = item;
@@ -110,7 +111,7 @@
 /*
  * Function: Update our storage with new lyrics.
  */
-- (void)operationReportsAvailableLyrics:(LGRLyricsOperation *)operation
+- (void)operationReportsAvailableLyrics:(LGROperation *)operation
 {
     if (_ready)
     {

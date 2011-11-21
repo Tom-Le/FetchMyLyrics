@@ -1,7 +1,13 @@
 include theos/makefiles/common.mk
 
 TWEAK_NAME = LyricsGrabber
-LyricsGrabber_FILES = LGRHook.xm LGRController.xm LGRLyricsWrapper.xm LGRLyricsOperation.xm LGRLyricsWikiAPIParser.xm LGRLyricsWikiPageParser.xm
+LyricsGrabber_FILES = LGRHook.xm \
+					  LGRController.xm \
+					  LGROperation.xm \
+					  LGRLyricsWrapper.xm \
+					  LGRLyricsWikiOperation.xm \
+					  LGRLyricsWikiAPIParser.xm \
+					  LGRLyricsWikiPageParser.xm
 LyricsGrabber_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
 LyricsGrabber_PRIVATE_FRAMEWORKS = iPodUI
 

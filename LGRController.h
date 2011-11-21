@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay, LGRLyricsWrapper, LGRLyricsOperation;
+@class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay, LGRLyricsWrapper, LGROperation, LGRLyricsWikiOperation;
 
 @interface LGRController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;
@@ -23,7 +23,7 @@
 - (void)handleSongWithNowPlayingItem:(IUMediaQueryNowPlayingItem *)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
                               artist:(NSString *)artist;
-- (void)operationReportsAvailableLyrics:(LGRLyricsOperation *)operation;
+- (void)operationReportsAvailableLyrics:(LGROperation *)operation;
 
 - (void)readFromLyricsStorageFile;
 - (void)writeToLyricsStorageFile;

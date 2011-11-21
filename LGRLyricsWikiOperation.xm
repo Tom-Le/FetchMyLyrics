@@ -1,5 +1,5 @@
 /*******************************************************************************
- * LGRLyricsOperation.xm
+ * LGRLyricsWikiOperation.xm
  * LyricsGrabber
  *
  * Copyright 2011, Le Son.
@@ -7,7 +7,7 @@
  * Licensed under the BSD license, available here: http://bit.ly/vSZSvM
  ******************************************************************************/
 
-#import "LGRLyricsOperation.h"
+#import "LGRLyricsWikiOperation.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
 #import "LGRLyricsWrapper.h"
@@ -16,9 +16,7 @@
 #import "LGRController.h"
 #import "LGRCommon.h"
 
-@implementation LGRLyricsOperation
-
-@synthesize title = _title, artist = _artist, lyrics = _lyrics, nowPlayingItem = _nowPlayingItem;
+@implementation LGRLyricsWikiOperation
 
 #pragma mark Initialization
 /*
