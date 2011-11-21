@@ -4,8 +4,18 @@
 # and with the assumption that you have your public key stored in your 
 # iDevice (otherwise it would ask for your password every time and that would
 # be a pain in the ass.
+
+# Can supply 1 argument for port number; default is 2222.
+
+if [ -n "$1" ]
+then
+    LGRPORTNO="$1"
+else
+    LGRPORTNO="2222"
+fi
+
 make
-scp -P 2222 obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
-scp -P 2222 lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries
+scp -P $LGRPORTNO obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries
+scp -P $LGRPORTNO lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries
 echo "Respringing..."
-ssh -p 2222 -l root localhost killall SpringBoard
+ssh -p $LGRPORTNO -l root localhost killall SpringBoard
