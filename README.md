@@ -16,7 +16,7 @@ Included with Xcode.
 
 Todo:
 -----
-1. Show a button in Now Playing view that indicates LyricsGrabber's
+1. Show a button in Now Playing view that indicates the tweak's
 status (disabled, fetching lyrics, enabled).
 2. Preferences (preferably in Settings.app, like Activator).
 3. Make a proper website for this because no one likes to be greeted
