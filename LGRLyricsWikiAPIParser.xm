@@ -51,9 +51,7 @@
         return;
 
     // Download the whole XML
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSData *data = [NSData dataWithContentsOfURL:self.URLToAPIPage];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     if (data)
     {
         // Set up NSXMLParser instance

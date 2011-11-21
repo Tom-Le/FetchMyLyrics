@@ -53,7 +53,6 @@
     if (!self.URLToPage)
         return;
 
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSData *data = [NSData dataWithContentsOfURL:self.URLToPage];
     if (data)
     {
@@ -115,11 +114,15 @@
 
     // Fetch lyrics (last Javascript, I swear!)
     NSString *lyrics = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByClassName('lyricbox')[0].innerText"];
+    if ([lyrics rangeOfString:@"Unfortunately, we are not licensed to display the full lyrics for this song at the moment"].location != NSNotFound)
+        lyrics = @"";
+        // NOTE: Empty string denotes "didn't find anything, don't bother trying again next time"
+        //       Why? LyricsWiki hasn't been able to obtain license for all songs.
+        //       I don't really like the idea of showing a short excerpt.
+        // Also: Fuck you music industry. I have said this before (in LGRLyricsOperation.xm) but whatever.
 
     _lyrics = [lyrics copy];
     _done = YES;
-
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
 @end

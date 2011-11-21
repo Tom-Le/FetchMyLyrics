@@ -34,7 +34,7 @@
     // Since this method has to return ASAP, the whole task will be shoved
     // to another operation queue.
     //
-    // NOTE: We use 2 queues to denote 2 different tasks:
+    // NOTE: We use 2 queues for 2 different tasks:
     //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
