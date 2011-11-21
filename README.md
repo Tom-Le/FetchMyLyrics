@@ -6,7 +6,7 @@ lyrics are saved to `/private/var/mobile/Library/lfetcher/storage`.
 Note: "L'Fetcher" is not its official name. (I am aware that this name
 sucks, but I'm not an English major. Halp?) :-(
 
-Compilation notes:
+Compilation notes
 ------------------
 - Need `MediaPlayer.framework` (public) and `iPodUI.framework` (private).
 Included with Xcode.
@@ -14,10 +14,15 @@ Included with Xcode.
 
 [theos-link]:[https://github.com/DHowett/theos]
 
-Todo:
+Todo
 -----
 1. Show a button in Now Playing view that indicates the tweak's
 status (disabled, fetching lyrics, enabled).
 2. Preferences (preferably in Settings.app, like Activator).
 3. Make a proper website for this because no one likes to be greeted
 by a bunch of files.
+
+License
+-------
+WTFPL. Attribution would be really nice, but not necessary. Would be
+really, really, really nice though... :3
