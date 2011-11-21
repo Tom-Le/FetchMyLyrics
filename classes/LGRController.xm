@@ -18,7 +18,7 @@
 #import "LGROperation.h"
 #import "LGRLyricsWikiOperation.h"
 
-#define LGRLyricsStorageFilePath @"~/Library/L'Fetcher/storage"
+#define LGRLyricsStorageFilePath @"~/Library/lfetcher/storage"
 
 @implementation LGRController
 

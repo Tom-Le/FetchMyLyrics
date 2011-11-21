@@ -1,7 +1,7 @@
 MobileSubstrate tweak that helps Music.app/iPod.app grabs lyrics from the
 Internet. Compatible with iOS 5. (Working on compatibility with iOS 4.)
 Roughly tested on a third generation iPod touch (my iPod). Downloaded
-lyrics are saved to `/private/var/mobile/Library/iPodLyrics/storage`.
+lyrics are saved to `/private/var/mobile/Library/lfetcher/storage`.
 
 Note: "L'Fetcher" is not its official name. (I am aware that this name
 sucks, but I'm not an English major. Halp?) :-(
