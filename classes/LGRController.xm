@@ -103,7 +103,7 @@
     {
         for (LGRLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
-                return [lw.lyrics stringByAppendingString:@"\n\n[ Fetched by L'Fetcher ]"];
+                return lw.lyrics; 
     }
 
     // Found nothing or wasn't ready
@@ -185,7 +185,7 @@
     {
         if (_lyricsWrappers)
             [_lyricsWrappers release];
-        _lyricsWrappers = [storedWrappers retain];
+        _lyricsWrappers = [(NSArray *)storedWrappers mutableCopy];
     }
 }
 
