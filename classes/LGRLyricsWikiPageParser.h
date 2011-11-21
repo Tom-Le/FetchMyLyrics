@@ -1,6 +1,6 @@
 /*******************************************************************************
  * LGRLyricsWikiPageParser.h
- * LyricsGrabber
+ * iPodLyrics
  *
  * Copyright 2011, Le Son.
  * All rights reserved.

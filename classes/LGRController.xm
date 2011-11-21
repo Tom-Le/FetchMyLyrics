@@ -1,6 +1,6 @@
 /*******************************************************************************
  * LGRController.xm
- * LyricsGrabber
+ * iPodLyrics
  *
  * Copyright 2011, Le Son.
  * All rights reserved.
@@ -18,7 +18,7 @@
 #import "LGROperation.h"
 #import "LGRLyricsWikiOperation.h"
 
-#define LGRLyricsStorageFilePath @"~/Library/LyricsGrabber/storage"
+#define LGRLyricsStorageFilePath @"~/Library/iPodLyrics/storage"
 
 @implementation LGRController
 
@@ -190,8 +190,8 @@
 - (void)writeToLyricsStorageFile
 {
     NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[@"~/Library/LyricsGrabber" stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[@"~/Library/LyricsGrabber" stringByExpandingTildeInPath]
+    if (![manager fileExistsAtPath:[@"~/Library/iPodLyrics" stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[@"~/Library/iPodLyrics" stringByExpandingTildeInPath]
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
