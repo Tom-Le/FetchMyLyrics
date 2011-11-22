@@ -26,3 +26,7 @@ License
 -------
 WTFPL. Attribution would be really nice, but not necessary. Would be
 really, really, really nice though... :3
+
+About
+-----
+Made by a cute cat who calls himself Tom. :3
