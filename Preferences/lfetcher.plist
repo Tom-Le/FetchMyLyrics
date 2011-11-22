@@ -23,7 +23,7 @@
             <key>key</key>
             <string>LGREnable</string>
             <key>label</key>
-            <string>Enable</string>
+            <string>Enabled</string>
         </dict>
         <dict>
             <key>cell</key>

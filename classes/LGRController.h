@@ -11,7 +11,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay, LGRLyricsWrapper, LGROperation, LGRLyricsWikiOperation;
+@class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay;
+@class LGRLyricsWrapper, LGROperation, LGRLyricsWikiOperation, LGRAZLyricsOperation, LGRAZLyricsOperation;
 
 @interface LGRController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;

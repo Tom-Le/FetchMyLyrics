@@ -19,6 +19,7 @@
 #import "LGRLyricsWrapper.h"
 #import "LGROperation.h"
 #import "LGRLyricsWikiOperation.h"
+#import "LGRAZLyricsOperation.h"
 
 #define LGRLyricsStorageFilePath @"~/Library/lfetcher/storage"
 
@@ -72,7 +73,8 @@
             if ([operationKey isEqualToString:@"LGRLyricsWikiOperation"])
                 operation = [LGRLyricsWikiOperation operation];
             else if ([operationKey isEqualToString:@"LGRAZLyricsOperation"])
-                operation = nil; // support not yet present
+                operation = [LGRAZLyricsOperation operation];
+                //operation = [LGRAZLyricsOperation operation];
 
             if (operation)
             {

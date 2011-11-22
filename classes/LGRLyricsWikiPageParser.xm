@@ -86,7 +86,15 @@
 
     // Note: This class _will_ break if LyricsWiki changes its layout.
     //       I'll add a few more sources to fetch lyrics from in the future.
-    //       I don't want to be sued though :-(
+
+    // Check if the lyrics page exist.
+    // In most cases, it should (we are using its API, after all).
+    NSString *fourOhFour = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('body')[0].innerText.search('This page needs content. You can help by adding a sentence or a photo!')"];
+    if (![fourOhFour isEqualToString:@"-1"])
+    {
+        _done = YES;
+        return;
+    }
 
     // The lyrics resides inside a <div class='lyricbox'>
     // First child is always a ringtone ad; get rid of this

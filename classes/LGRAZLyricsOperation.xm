@@ -1,5 +1,5 @@
 /*******************************************************************************
- * LGRLyricsWikiOperation.xm
+ * LGRAZLyricsOperation.xm
  * L'Fetcher
  *
  * This program is free software. It comes without any warranty, to
@@ -9,16 +9,15 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRLyricsWikiOperation.h"
+#import "LGRAZLyricsOperation.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
+#import "LGRAZLyricsPageParser.h"
 #import "LGRLyricsWrapper.h"
-#import "LGRLyricsWikiAPIParser.h"
-#import "LGRLyricsWikiPageParser.h"
 #import "LGRController.h"
 #import "LGRCommon.h"
 
-@implementation LGRLyricsWikiOperation
+@implementation LGRAZLyricsOperation
 
 #pragma mark Initialization
 /*
@@ -35,7 +34,7 @@
         _nowPlayingItem = nil;
 
         _pool = nil;
-
+        
         _executing = NO;
         _finished = NO;
     }
@@ -54,7 +53,7 @@
 #pragma mark Task
 /*
  * Function: Start operation.
- *           This method spawns a new thread to run the task.
+ *           Spawns new thread.
  */
 - (void)start
 {
@@ -84,63 +83,43 @@
 - (void)main
 {
     _pool = [[NSAutoreleasePool alloc] init];
-
+    
     @try
     {
-        // FIRST STEP: Ask LyricsWiki API for song data.
+        // FIRST STEP: URL.
 
-        // Note: periodically check [self.nowPlayingItem hasDisplayableText]
-        // if at any time this returns yes, abort operation.
+        // Periodic check.
         if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
             return;
 
-        // Form URL for request
-        NSString *APIRequestURLStringUnescaped = [NSString stringWithFormat:@"http://lyrics.wikia.com/api.php?fmt=xml&song=%@&artist=%@", self.title, self.artist];
-        NSString *APIRequestURLString = [APIRequestURLStringUnescaped stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSURL *APIRequestURL = [NSURL URLWithString:APIRequestURLString];
-
-        // SECOND STEP: Parse for URL to page with lyrics.
-        //              LyricsWiki no longer returns the full lyrics because of the fucking entertainment industry
-        //              that is looking forward to pass SOPA to further destroy the Internet. Fuck you, industry.
-        //              See how you're clamping innovation? This tweak could have been _way easier_ had it not been
-        //              for your filthy hands. </endrant> (((sorry to whoever reading my code)))
-
-        // Periodic check
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
-            return;
-        
-        // Set up synchronous parser.
-        // I chose this model (instead of an asynchronous parser that can for eg. notify this instance
-        // when it's done) because it would keep our task wrapped in - (void)main which is IMO
-        // 10000x cleaner. Of course, if performance issues arise, I'll rethink my choices.
-        LGRLyricsWikiAPIParser *APIParser = [[[LGRLyricsWikiAPIParser alloc] init] autorelease];
-        APIParser.URLToAPIPage = APIRequestURL;
-        [APIParser beginParsing];
-        
-        // Busy waiting (won't lock up the UI, we're on a separate thread, so don't look so scared)
-        while (!APIParser.done)
-        {
-            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
-                return;
-            [NSThread sleepForTimeInterval:0.2];
-        }
-        
-        // Grab the URL
-        NSString *URLStringToLyricsPage = [[APIParser.URLStringToLyricsPage copy] autorelease];
-
-        // If the URL doesn't exist, return.
-        if (!URLStringToLyricsPage)
+        NSError *error = NULL;
+        NSRegularExpression *regexForURL = [NSRegularExpression regularExpressionWithPattern:@"[^a-zA-Z0-9]*"
+                                                                                     options:NSRegularExpressionCaseInsensitive
+                                                                                       error:&error];
+        if (error)
             return;
 
-        // THIRD STEP: Visit lyrics page and parse for the lyrics (in plain text)
+        NSString *titleForURL = [regexForURL stringByReplacingMatchesInString:[self.title lowercaseString]
+                                                                      options:0
+                                                                        range:NSMakeRange(0, [self.title length])
+                                                                 withTemplate:@""];
+        NSString *artistForURL = [regexForURL stringByReplacingMatchesInString:[self.artist lowercaseString]
+                                                                       options:0
+                                                                         range:NSMakeRange(0, [self.artist length])
+                                                                  withTemplate:@""];
+        NSString *URLStringToPage = [@"http://www.azlyrics.com/lyrics/" stringByAppendingFormat:@"%@/%@.html", artistForURL, titleForURL];
+        NSURL *URLToPage = [NSURL URLWithString:URLStringToPage];
 
-        // Periodic check
+        // Periodic check.
         if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
             return;
 
-        // Set up synchronous parser.
-        LGRLyricsWikiPageParser *pageParser = [[[LGRLyricsWikiPageParser alloc] init] autorelease];
-        pageParser.URLToPage = [NSURL URLWithString:URLStringToLyricsPage];
+        // SECOND STEP: Fetch lyrics
+
+        // Set up synchronous parser
+        // (Read LGRLyricsWikiOperation.xm for an explanation on why I chose to make my parser synchronous)
+        LGRAZLyricsPageParser *pageParser = [[[LGRAZLyricsPageParser alloc] init] autorelease];
+        pageParser.URLToPage = URLToPage;
         [pageParser beginParsing];
 
         // Busy waiting
@@ -157,18 +136,16 @@
     }
     @catch (id e)
     {
-        DebugLog(@"DUN DUN EXCEPTION: %@", e);
+        DebugLog(@"DUN DUN DUN EXCEPTION: %@", e);
     }
     @finally
     {
-        // Will be executed even if the code block in @try {} returns before completing
         [self completeOperation];
     }
 }
 
 /*
  * Function: Wrap up the task.
- *           Notify LGRController singleton if we fetched some lyrics.
  */
 - (void)completeOperation
 {

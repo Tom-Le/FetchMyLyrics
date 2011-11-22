@@ -1,5 +1,5 @@
 /*******************************************************************************
- * LGRLyricsWikiPageParser.h
+ * LGRAZLyricsPageParser.h
  * L'Fetcher
  *
  * This program is free software. It comes without any warranty, to
@@ -12,7 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface LGRLyricsWikiPageParser : NSObject <UIWebViewDelegate> {
+@interface LGRAZLyricsPageParser : NSObject <UIWebViewDelegate> {
     NSURL *_URLToPage;
     BOOL _done;
     UIWebView *_scraperWebView;
@@ -25,5 +25,6 @@
 @property (nonatomic, readonly) NSString *lyrics;
 
 - (void)beginParsing;
+- (void)pollForPageLoadCompletion;
 
 @end

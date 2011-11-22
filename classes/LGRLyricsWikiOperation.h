@@ -22,9 +22,6 @@
     BOOL _finished;
 }
 
-- (id)init;
-+ (id)operation;
-
 - (void)completeOperation;
 
 @end
