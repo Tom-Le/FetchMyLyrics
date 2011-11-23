@@ -85,6 +85,12 @@
 
 %hook MPPortraitInfoOverlay
 
+/*
+ * Hooks: - [MPPortraitInfoOverlay initWithFrame:]
+ *        - [MPPortraitInfoOverlay dealloc]
+ * Goal : Retain a reference to the portrait view, so that we can refresh the
+ *        lyrics text view when our operations return with new lyrics.
+ */
 - (id)initWithFrame:(CGRect)frame
 {
     id view = %orig;
