@@ -6,7 +6,10 @@ lyrics are saved to `/private/var/mobile/Library/FetchMyLyrics/storage`.
 Compilation notes
 ------------------
 - Need `MediaPlayer.framework` (public) and `iPodUI.framework` (private).
-Included with Xcode.
+Included with Xcode 4.2, but if you're not on a Mac, you can get it from
+your iDevice.
+- Need a class-dump from the above frameworks. Drop the headers in
+`./headers`.
 - Make use of Dustin Howett's excellent [theos][theos-link].
 
 [theos-link]:[https://github.com/DHowett/theos]
