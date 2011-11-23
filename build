@@ -9,17 +9,17 @@
 
 if [ -n "$1" ]
 then
-    LGRPORTNO="$1"
+    FML_PORTNO="$1"
 else
-    LGRPORTNO="2222"
+    FML_PORTNO="2222"
 fi
 
 make
 
 echo "Transferring files..."
-scp -P $LGRPORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $LGRPORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $LGRPORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/
+scp -P $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $FML_PORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/
 
 echo "Respringing..."
-ssh -p $LGRPORTNO -l root localhost killall SpringBoard
+ssh -p $FML_PORTNO -l root localhost killall SpringBoard

@@ -175,6 +175,10 @@
 {
     dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(global_queue, ^{
+        NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnable",
+                                                                            @"FMLLyricsWikiOperation", @"FMLOperation", nil];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+
         [self readFromLyricsStorageFile];
 
         _ready = YES;
