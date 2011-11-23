@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRCommon.h 
- * L'Fetcher
+ * FMLAZLyricsOperation.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,6 +9,22 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-// For debugging (because they say NSLog is synchronous and all)
-#define DEBUG_MSG 1
-#define DebugLog(fmt, ...) if (DEBUG_MSG == 1) NSLog((@"L'Fetcher: " fmt), ##__VA_ARGS__)
+#import <Foundation/Foundation.h>
+
+#import "FMLOperation.h"
+
+@class FMLController, FMLLyricsWrapper, IUMediaQueryNowPlayingItem;
+
+@interface FMLAZLyricsOperation : FMLOperation {
+    NSAutoreleasePool *_pool;
+
+    BOOL _executing;
+    BOOL _finished;
+}
+
+- (id)init;
++ (id)operation;
+
+- (void)completeOperation;
+
+@end

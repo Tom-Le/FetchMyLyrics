@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWikiOperation.xm
- * L'Fetcher
+ * FMLLyricsWikiOperation.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,16 +9,16 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRLyricsWikiOperation.h"
+#import "FMLLyricsWikiOperation.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
-#import "LGRLyricsWrapper.h"
-#import "LGRLyricsWikiAPIParser.h"
-#import "LGRLyricsWikiPageParser.h"
-#import "LGRController.h"
-#import "LGRCommon.h"
+#import "FMLLyricsWrapper.h"
+#import "FMLLyricsWikiAPIParser.h"
+#import "FMLLyricsWikiPageParser.h"
+#import "FMLController.h"
+#import "FMLCommon.h"
 
-@implementation LGRLyricsWikiOperation
+@implementation FMLLyricsWikiOperation
 
 #pragma mark Initialization
 /*
@@ -113,7 +113,7 @@
         // I chose this model (instead of an asynchronous parser that can for eg. notify this instance
         // when it's done) because it would keep our task wrapped in - (void)main which is IMO
         // 10000x cleaner. Of course, if performance issues arise, I'll rethink my choices.
-        LGRLyricsWikiAPIParser *APIParser = [[[LGRLyricsWikiAPIParser alloc] init] autorelease];
+        FMLLyricsWikiAPIParser *APIParser = [[[FMLLyricsWikiAPIParser alloc] init] autorelease];
         APIParser.URLToAPIPage = APIRequestURL;
         [APIParser beginParsing];
         
@@ -139,7 +139,7 @@
             return;
 
         // Set up synchronous parser.
-        LGRLyricsWikiPageParser *pageParser = [[[LGRLyricsWikiPageParser alloc] init] autorelease];
+        FMLLyricsWikiPageParser *pageParser = [[[FMLLyricsWikiPageParser alloc] init] autorelease];
         pageParser.URLToPage = [NSURL URLWithString:URLStringToLyricsPage];
         [pageParser beginParsing];
 
@@ -168,13 +168,13 @@
 
 /*
  * Function: Wrap up the task.
- *           Notify LGRController singleton if we fetched some lyrics.
+ *           Notify FMLController singleton if we fetched some lyrics.
  */
 - (void)completeOperation
 {
-    // Notify LGRController singleton
+    // Notify FMLController singleton
     if (self.lyrics)
-        [[LGRController sharedController] operationReportsAvailableLyrics:self];
+        [[FMLController sharedController] operationReportsAvailableLyrics:self];
 
     // Mark task as finished
     [self willChangeValueForKey:@"isFinished"];

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWikiPageParser.h
- * L'Fetcher
+ * FMLOperation.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -10,20 +10,26 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-@interface LGRLyricsWikiPageParser : NSObject <UIWebViewDelegate> {
-    NSURL *_URLToPage;
-    BOOL _done;
-    UIWebView *_scraperWebView;
-    UIWindow *_dummyWindow;
+@class IUMediaQueryNowPlayingItem;
+
+@interface FMLOperation : NSOperation {
+    NSString *_title;
+    NSString *_artist;
     NSString *_lyrics;
+
+    IUMediaQueryNowPlayingItem *_nowPlayingItem;
+
+    BOOL _abs_finished;
 }
 
-@property (nonatomic, copy) NSURL *URLToPage;
-@property (nonatomic, readonly, getter=isDone) BOOL done;
-@property (nonatomic, readonly) NSString *lyrics;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *artist;
+@property (nonatomic, copy) NSString *lyrics;
+@property (nonatomic, retain) IUMediaQueryNowPlayingItem *nowPlayingItem; 
 
-- (void)beginParsing;
+- (id)init;
++ (id)operation;
 
 @end
+

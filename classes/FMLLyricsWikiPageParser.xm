@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWikiPageParser.xm
- * L'Fetcher
+ * FMLLyricsWikiPageParser.xm
+ * FetchMyLyrics
  *
  * NOTE: This class is HIGHLY error prone.
  *
@@ -11,10 +11,10 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRLyricsWikiPageParser.h"
-#import "LGRCommon.h"
+#import "FMLLyricsWikiPageParser.h"
+#import "FMLCommon.h"
 
-@implementation LGRLyricsWikiPageParser
+@implementation FMLLyricsWikiPageParser
 
 @synthesize URLToPage = _URLToPage, lyrics = _lyrics, done = _done;
 
@@ -129,7 +129,7 @@
         // NOTE: Empty string denotes "didn't find anything, don't bother trying again next time"
         //       Why? LyricsWiki hasn't been able to obtain license for all songs.
         //       I don't really like the idea of showing a short excerpt.
-        // Also: Fuck you music industry. I have said this before (in LGRLyricsOperation.xm) but whatever.
+        // Also: Fuck you music industry. I have said this before (in FMLLyricsOperation.xm) but whatever.
 
     _lyrics = [lyrics copy];
     _done = YES;

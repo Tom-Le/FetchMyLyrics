@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWikiAPIParser.xm
- * L'Fetcher
+ * FMLLyricsWikiAPIParser.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,10 +9,10 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRLyricsWikiAPIParser.h"
-#import "LGRCommon.h"
+#import "FMLLyricsWikiAPIParser.h"
+#import "FMLCommon.h"
 
-@implementation LGRLyricsWikiAPIParser
+@implementation FMLLyricsWikiAPIParser
 
 @synthesize URLToAPIPage = _URLToAPIPage, done = _done, URLStringToLyricsPage = _URLStringToLyricsPage;
 

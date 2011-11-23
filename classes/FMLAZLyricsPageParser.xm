@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRAZLyricsPageParser.xm
- * L'Fetcher
+ * FMLAZLyricsPageParser.xm
+ * FetchMyLyrics
  *
  * NOTE: This class is HIGHLY error prone.
  *
@@ -11,10 +11,10 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRAZLyricsPageParser.h"
-#import "LGRCommon.h"
+#import "FMLAZLyricsPageParser.h"
+#import "FMLCommon.h"
 
-@implementation LGRAZLyricsPageParser
+@implementation FMLAZLyricsPageParser
 
 @synthesize URLToPage = _URLToPage, lyrics = _lyrics, done = _done;
 
@@ -94,7 +94,7 @@
 
     if ([@"true" isEqualToString:[_scraperWebView stringByEvaluatingJavaScriptFromString:@"document.UIWebViewDocumentIsReady"]])
     {
-        // We are extracting the lyrics through Javascript (see LGRLyricsWikiPageParser.xm for more detail)
+        // We are extracting the lyrics through Javascript (see FMLLyricsWikiPageParser.xm for more detail)
         // Note: This class will break if AZLyrics changes its layout.
 
         // Check if the lyrics page exist.
@@ -113,7 +113,7 @@
             _lyrics = [lyrics copy];
         else
             _lyrics = [@"" copy];
-            // See LGRLyricsWikiPageParser.xm on what's the meaning of the empty string @""
+            // See FMLLyricsWikiPageParser.xm on what's the meaning of the empty string @""
 
         _done = YES;
     }

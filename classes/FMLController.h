@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRController.h
- * L'Fetcher
+ * FMLController.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -12,9 +12,9 @@
 #import <Foundation/Foundation.h>
 
 @class IUMediaQueryNowPlayingItem, MPMediaItem, MPPortraitInfoOverlay;
-@class LGRLyricsWrapper, LGROperation, LGRLyricsWikiOperation, LGRAZLyricsOperation, LGRAZLyricsOperation;
+@class FMLLyricsWrapper, FMLOperation, FMLLyricsWikiOperation, FMLAZLyricsOperation, FMLAZLyricsOperation;
 
-@interface LGRController : NSObject {
+@interface FMLController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;
     NSMutableArray *_lyricsWrappers;
 
@@ -26,7 +26,7 @@
 - (void)handleSongWithNowPlayingItem:(IUMediaQueryNowPlayingItem *)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
                               artist:(NSString *)artist;
-- (void)operationReportsAvailableLyrics:(LGROperation *)operation;
+- (void)operationReportsAvailableLyrics:(FMLOperation *)operation;
 
 - (void)readFromLyricsStorageFile;
 - (void)writeToLyricsStorageFile;

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWrapper.xm
- * L'Fetcher
+ * FMLLyricsWrapper.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,13 +9,13 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRLyricsWrapper.h"
+#import "FMLLyricsWrapper.h"
 
-#define LGRTitleKey @"LGRTitleKey"
-#define LGRArtistKey @"LGRArtistKey"
-#define LGRLyricsKey @"LRGLyricsKey"
+#define FMLTitleKey @"FMLTitleKey"
+#define FMLArtistKey @"FMLArtistKey"
+#define FMLLyricsKey @"LRGLyricsKey"
 
-@implementation LGRLyricsWrapper
+@implementation FMLLyricsWrapper
 
 @synthesize title = _title, artist = _artist, lyrics = _lyrics;
 
@@ -52,9 +52,9 @@
 {
     if ((self = [super init]))
     {
-        _title = [[coder decodeObjectForKey:LGRTitleKey] copy];
-        _artist = [[coder decodeObjectForKey:LGRArtistKey] copy];
-        _lyrics = [[coder decodeObjectForKey:LGRLyricsKey] copy];
+        _title = [[coder decodeObjectForKey:FMLTitleKey] copy];
+        _artist = [[coder decodeObjectForKey:FMLArtistKey] copy];
+        _lyrics = [[coder decodeObjectForKey:FMLLyricsKey] copy];
     }
 
     return self;
@@ -62,9 +62,9 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeObject:_title forKey:LGRTitleKey];
-    [coder encodeObject:_artist forKey:LGRArtistKey];
-    [coder encodeObject:_lyrics forKey:LGRLyricsKey];
+    [coder encodeObject:_title forKey:FMLTitleKey];
+    [coder encodeObject:_artist forKey:FMLArtistKey];
+    [coder encodeObject:_lyrics forKey:FMLLyricsKey];
 }
 
 @end

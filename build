@@ -17,9 +17,9 @@ fi
 make
 
 echo "Transferring files..."
-scp -P $LGRPORTNO obj/lfetcher.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $LGRPORTNO lfetcher.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $LGRPORTNO Preferences/lfetcher.plist root@localhost:/Library/PreferenceLoader/Preferences/
+scp -P $LGRPORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $LGRPORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -P $LGRPORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/
 
 echo "Respringing..."
 ssh -p $LGRPORTNO -l root localhost killall SpringBoard

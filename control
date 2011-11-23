@@ -1,5 +1,5 @@
-Package: com.uglycathasnodomain.lfetcher
-Name: L'Fetcher
+Package: com.uglycathasnodomain.FetchMyLyrics
+Name: FetchMyLyrics
 Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm

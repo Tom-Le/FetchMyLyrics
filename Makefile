@@ -1,17 +1,17 @@
 include theos/makefiles/common.mk
 
-TWEAK_NAME = lfetcher
-lfetcher_FILES = classes/LGRHook.xm \
-					  classes/LGRController.xm \
-					  classes/LGROperation.xm \
-					  classes/LGRLyricsWrapper.xm \
-					  classes/LGRLyricsWikiOperation.xm \
-					  classes/LGRLyricsWikiAPIParser.xm \
-					  classes/LGRLyricsWikiPageParser.xm \
-					  classes/LGRAZLyricsOperation.xm \
-					  classes/LGRAZLyricsPageParser.xm
-lfetcher_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
-lfetcher_PRIVATE_FRAMEWORKS = iPodUI
+TWEAK_NAME = FetchMyLyrics
+FetchMyLyrics_FILES = classes/FMLHook.xm \
+					  classes/FMLController.xm \
+					  classes/FMLOperation.xm \
+					  classes/FMLLyricsWrapper.xm \
+					  classes/FMLLyricsWikiOperation.xm \
+					  classes/FMLLyricsWikiAPIParser.xm \
+					  classes/FMLLyricsWikiPageParser.xm \
+					  classes/FMLAZLyricsOperation.xm \
+					  classes/FMLAZLyricsPageParser.xm
+FetchMyLyrics_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
+FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 
 CFLAGS = -I./classes -I./ext -I./headers -I/usr/include/objc 
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRController.xm
- * L'Fetcher
+ * FMLController.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,21 +9,21 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRController.h"
-#import "LGRCommon.h"
+#import "FMLController.h"
+#import "FMLCommon.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
 #import <MediaPlayer/MPMediaItem.h>
 #import <MediaPlayer/MPPortraitInfoOverlay.h>
 #import <MediaPlayer/MPAVItem.h>
-#import "LGRLyricsWrapper.h"
-#import "LGROperation.h"
-#import "LGRLyricsWikiOperation.h"
-#import "LGRAZLyricsOperation.h"
+#import "FMLLyricsWrapper.h"
+#import "FMLOperation.h"
+#import "FMLLyricsWikiOperation.h"
+#import "FMLAZLyricsOperation.h"
 
-#define LGRLyricsStorageFilePath @"~/Library/lfetcher/storage"
+#define FMLLyricsStorageFolder @"~/Library/FetchMyLyrics/"
 
-@implementation LGRController
+@implementation FMLController
 
 #pragma mark Now Playing
 
@@ -42,7 +42,7 @@
     //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
     if (_ready && enabled)
     {
         dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -57,24 +57,24 @@
             NSString *title = [[item mediaItem] valueForProperty:@"title"];
             NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
 
-            // If LGRController already has lyrics for the song, return.
-            for (LGRLyricsWrapper *lw in _lyricsWrappers)
+            // If FMLController already has lyrics for the song, return.
+            for (FMLLyricsWrapper *lw in _lyricsWrappers)
                 if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
                     return;
 
             // If a task is already running for the song requested, return.
-            for (LGRLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
+            for (FMLLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
                 if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
                     return;
 
             // Start a new task to fetch the lyrics
-            NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"LGROperation"];
-            LGROperation *operation;
-            if ([operationKey isEqualToString:@"LGRLyricsWikiOperation"])
-                operation = [LGRLyricsWikiOperation operation];
-            else if ([operationKey isEqualToString:@"LGRAZLyricsOperation"])
-                operation = [LGRAZLyricsOperation operation];
-                //operation = [LGRAZLyricsOperation operation];
+            NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
+            FMLOperation *operation;
+            if ([operationKey isEqualToString:@"FMLLyricsWikiOperation"])
+                operation = [FMLLyricsWikiOperation operation];
+            else if ([operationKey isEqualToString:@"FMLAZLyricsOperation"])
+                operation = [FMLAZLyricsOperation operation];
+                //operation = [FMLAZLyricsOperation operation];
 
             if (operation)
             {
@@ -111,10 +111,10 @@
  */
 - (NSString *)lyricsForSongWithTitle:(NSString *)title artist:(NSString *)artist
 {
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
     if (_ready && enabled)
     {
-        for (LGRLyricsWrapper *lw in _lyricsWrappers)
+        for (FMLLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
                 return lw.lyrics; 
     }
@@ -126,13 +126,13 @@
 /*
  * Function: Update our storage with new lyrics.
  */
-- (void)operationReportsAvailableLyrics:(LGROperation *)operation
+- (void)operationReportsAvailableLyrics:(FMLOperation *)operation
 {
     if (_ready)
     {
         // Prevent duplicates
         BOOL duplicate = NO;
-        for (LGRLyricsWrapper *lw in _lyricsWrappers)
+        for (FMLLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:operation.title] && [lw.artist isEqualToString:operation.artist]) 
             {
                 lw.lyrics = operation.lyrics;
@@ -142,7 +142,7 @@
         if (!duplicate)
         {
             // No duplicate found, add.
-            LGRLyricsWrapper *wrapper = [LGRLyricsWrapper lyricsWrapper];
+            FMLLyricsWrapper *wrapper = [FMLLyricsWrapper lyricsWrapper];
             wrapper.title = operation.title;
             wrapper.artist = operation.artist;
             wrapper.lyrics = operation.lyrics;
@@ -153,7 +153,7 @@
 
         // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
         // and only if the tweak is enabled
-        BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"LGREnable"];
+        BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
         if (enabled)
         {
             NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
@@ -191,7 +191,8 @@
     NSMutableArray *storedWrappers;
     @try
     {
-        storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:[LGRLyricsStorageFilePath stringByExpandingTildeInPath]];
+        NSString *path = [[FMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
+        storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     }
     @catch (id e)
     {
@@ -210,14 +211,14 @@
 - (void)writeToLyricsStorageFile
 {
     NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[@"~/Library/lfetcher" stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[@"~/Library/lfetcher" stringByExpandingTildeInPath]
+    if (![manager fileExistsAtPath:[FMLLyricsStorageFolder stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[FMLLyricsStorageFolder stringByExpandingTildeInPath]
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
 
     [NSKeyedArchiver archiveRootObject:_lyricsWrappers
-                                toFile:[LGRLyricsStorageFilePath stringByExpandingTildeInPath]];
+                                toFile:[[FMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
 }
 
 #pragma mark Singleton
@@ -226,7 +227,7 @@
  */
 + (id)sharedController
 {
-    static LGRController *singleton;
+    static FMLController *singleton;
 
     @synchronized(self)
     {

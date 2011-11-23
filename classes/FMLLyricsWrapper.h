@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWikiAPIParser.h
- * L'Fetcher
+ * FMLLyricsWrapper.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -11,22 +11,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LGRLyricsWikiAPIParser : NSObject <NSXMLParserDelegate> {
-    NSURL *_URLToAPIPage;
-    NSXMLParser *_parser;
-
-    BOOL _done;
-
-    BOOL _foundURLToLyricsPageElement;
-    NSString *_URLStringToLyricsPage;
-
-    NSMutableString *_mutableURLStringToLyricsPage;
+@interface FMLLyricsWrapper : NSObject <NSCoding> {
+    NSString *_title;
+    NSString *_artist;
+    NSString *_lyrics;
 }
 
-@property (nonatomic, copy) NSURL *URLToAPIPage;
-@property (nonatomic, readonly, getter=isDone) BOOL done;
-@property (nonatomic, readonly) NSString *URLStringToLyricsPage;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *artist;
+@property (nonatomic, copy) NSString *lyrics;
 
-- (void)beginParsing;
+- (id)init;
++ (id)lyricsWrapper;
 
 @end

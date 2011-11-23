@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRAZLyricsOperation.xm
- * L'Fetcher
+ * FMLAZLyricsOperation.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,15 +9,15 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGRAZLyricsOperation.h"
+#import "FMLAZLyricsOperation.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
-#import "LGRAZLyricsPageParser.h"
-#import "LGRLyricsWrapper.h"
-#import "LGRController.h"
-#import "LGRCommon.h"
+#import "FMLAZLyricsPageParser.h"
+#import "FMLLyricsWrapper.h"
+#import "FMLController.h"
+#import "FMLCommon.h"
 
-@implementation LGRAZLyricsOperation
+@implementation FMLAZLyricsOperation
 
 #pragma mark Initialization
 /*
@@ -117,8 +117,8 @@
         // SECOND STEP: Fetch lyrics
 
         // Set up synchronous parser
-        // (Read LGRLyricsWikiOperation.xm for an explanation on why I chose to make my parser synchronous)
-        LGRAZLyricsPageParser *pageParser = [[[LGRAZLyricsPageParser alloc] init] autorelease];
+        // (Read FMLLyricsWikiOperation.xm for an explanation on why I chose to make my parser synchronous)
+        FMLAZLyricsPageParser *pageParser = [[[FMLAZLyricsPageParser alloc] init] autorelease];
         pageParser.URLToPage = URLToPage;
         [pageParser beginParsing];
 
@@ -149,9 +149,9 @@
  */
 - (void)completeOperation
 {
-    // Notify LGRController singleton
+    // Notify FMLController singleton
     if (self.lyrics)
-        [[LGRController sharedController] operationReportsAvailableLyrics:self];
+        [[FMLController sharedController] operationReportsAvailableLyrics:self];
 
     // Mark task as finished
     [self willChangeValueForKey:@"isFinished"];

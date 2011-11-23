@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRHook.xm
- * L'Fetcher
+ * FMLHook.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -15,8 +15,8 @@
 //#import <iPodUI/IUNowPlayingAlbumFrontViewController.h> // not really needed
 //#import <iPodUI/IUNowPlayingPortraitViewController.h>
 
-#import "LGRController.h"
-#import "LGRCommon.h"
+#import "FMLController.h"
+#import "FMLCommon.h"
 
 %config(generator=internal)
 
@@ -24,7 +24,7 @@
 
 /*
  * Hook: - [MediaApplication application:didFinishLaunchingWithOptions:]
- * Goal: Initialize an instance of LGRController to be used later.
+ * Goal: Initialize an instance of FMLController to be used later.
  *       Will delegate most of the initialization to another thread
  *       to avoid locking the UI up.
  */
@@ -33,7 +33,7 @@
     // I don't even know why this method's return type is BOOL,
     // what a load of BOOLcrap.
 
-    [[LGRController sharedController] setup];
+    [[FMLController sharedController] setup];
 
     return %orig;
 }
@@ -44,7 +44,7 @@
 
 /*
  * Hook   : - [IUMediaQueryNowPlayingItem initWithMediaItem:]
- * Goal   : Report to shared LGRController instance every time a song is going
+ * Goal   : Report to shared FMLController instance every time a song is going
  *          to be played, so the instance can have a chance to prepare lyrics.
  * Caveats: Not sure if this is the right place to hook to.
  */
@@ -55,7 +55,7 @@
         if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(ret)]])
         {
             IUMediaQueryNowPlayingItem *item = (IUMediaQueryNowPlayingItem *)ret;
-            [[LGRController sharedController] handleSongWithNowPlayingItem:item]; 
+            [[FMLController sharedController] handleSongWithNowPlayingItem:item]; 
         }
 
     return ret;
@@ -77,7 +77,7 @@
     {
         NSString *title = [[self mediaItem] valueForProperty:@"title"];
         NSString *artist = [[self mediaItem] valueForProperty:@"artist"];
-        return [[LGRController sharedController] lyricsForSongWithTitle:title artist:artist];
+        return [[FMLController sharedController] lyricsForSongWithTitle:title artist:artist];
     }
 
     return lyrics;
@@ -91,14 +91,14 @@
 {
     id view = %orig;
     if (view)
-        [[LGRController sharedController] setCurrentInfoOverlay:self];
+        [[FMLController sharedController] setCurrentInfoOverlay:self];
 
     return view;
 }
 
 - (void)dealloc
 {
-    [[LGRController sharedController] ridCurrentInfoOverlay];
+    [[FMLController sharedController] ridCurrentInfoOverlay];
     %orig;
 }
 

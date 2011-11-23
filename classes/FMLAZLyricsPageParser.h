@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRAZLyricsPageParser.h
- * L'Fetcher
+ * FMLAZLyricsPageParser.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -12,7 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface LGRAZLyricsPageParser : NSObject <UIWebViewDelegate> {
+@interface FMLAZLyricsPageParser : NSObject <UIWebViewDelegate> {
     NSURL *_URLToPage;
     BOOL _done;
     UIWebView *_scraperWebView;

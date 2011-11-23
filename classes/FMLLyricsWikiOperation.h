@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGRLyricsWrapper.h
- * L'Fetcher
+ * FMLLyricsWikiOperation.h
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -11,17 +11,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LGRLyricsWrapper : NSObject <NSCoding> {
-    NSString *_title;
-    NSString *_artist;
-    NSString *_lyrics;
+#import "FMLOperation.h"
+
+@class FMLController, FMLLyricsWrapper, FMLLyricsWikiAPIParser, FMLLyricsWikiPageParser, IUMediaQueryNowPlayingItem;
+
+@interface FMLLyricsWikiOperation : FMLOperation { 
+    NSAutoreleasePool *_pool;
+
+    BOOL _executing;
+    BOOL _finished;
 }
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *artist;
-@property (nonatomic, copy) NSString *lyrics;
-
-- (id)init;
-+ (id)lyricsWrapper;
+- (void)completeOperation;
 
 @end

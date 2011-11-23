@@ -1,6 +1,6 @@
 /*******************************************************************************
- * LGROperation.xm
- * L'Fetcher
+ * FMLOperation.xm
+ * FetchMyLyrics
  *
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
@@ -9,12 +9,12 @@
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  ******************************************************************************/
 
-#import "LGROperation.h"
+#import "FMLOperation.h"
 
 #import <iPodUI/IUMediaQueryNowPlayingItem.h>
-#import "LGRCommon.h"
+#import "FMLCommon.h"
 
-@implementation LGROperation
+@implementation FMLOperation
 
 @synthesize title = _title, artist = _artist, lyrics = _lyrics, nowPlayingItem = _nowPlayingItem;
 
