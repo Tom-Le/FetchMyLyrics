@@ -31,6 +31,7 @@
 
 - (void)setCurrentInfoOverlay:(MPPortraitInfoOverlay *)overlay;
 - (void)ridCurrentInfoOverlay;
+- (void)reloadDisplayableTextView;
 
 + (id)sharedController;
 - (void)setup;

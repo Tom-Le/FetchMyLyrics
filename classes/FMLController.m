@@ -70,11 +70,6 @@
             // Start a new task to fetch the lyrics
             NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
             FMLOperation *operation = [[NSClassFromString(operationKey) alloc] init];
-            //if ([operationKey isEqualToString:@"FMLLyricsWikiOperation"])
-            //    operation = [FMLLyricsWikiOperation operation];
-            //else if ([operationKey isEqualToString:@"FMLAZLyricsOperation"])
-            //    operation = [FMLAZLyricsOperation operation];
-            //    //operation = [FMLAZLyricsOperation operation];
 
             if (operation)
             {
@@ -103,6 +98,17 @@
 {
     [_currentInfoOverlay release];
     _currentInfoOverlay = nil;
+}
+
+- (void)reloadDisplayableTextView
+{
+    if (_currentInfoOverlay)
+    {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [_currentInfoOverlay _updateDisplayableTextViewForItem:_currentInfoOverlay.item
+                                                           animate:YES];
+        }];
+    }
 }
 
 #pragma mark Lyrics
@@ -159,10 +165,7 @@
             NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
             NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
             if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [_currentInfoOverlay _updateDisplayableTextViewForItem:operation.nowPlayingItem
-                                                                   animate:YES];
-                }];
+                [self reloadDisplayableTextView];
         }
     }
 }

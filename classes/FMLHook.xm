@@ -38,6 +38,17 @@
     return %orig;
 }
 
+/*
+ * Hook: - [MediaApplication applicationDidBecomeActive:]
+ * Goal: Reload the displayable text view every time the application
+ *       becomes active, in case the user disables FML via Settings.app.
+ */
+- (void)applicationDidBecomeActive:(id)arg1
+{
+    %orig;
+    [[FMLController sharedController] reloadDisplayableTextView];
+}
+
 %end
 
 %hook IUMediaQueryNowPlayingItem
