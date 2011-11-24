@@ -28,6 +28,7 @@ MIT license, included with this repo.
 Attribution
 -----------
 This tweak makes use of the following works:
+
 - [theos][theos-link] by Dustin Howett. Awesome framework.
 - [class-dump][class-dump-link] by Steve Nygard.
 - MobileSubstrate by saurik. (I suppose you'd have known this by now)
