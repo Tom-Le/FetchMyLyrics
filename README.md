@@ -23,7 +23,8 @@ by a bunch of source code.
 
 License
 -------
-MIT license, included with this repo.
+MIT license. The license is included with this repo, or available at
+https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
 
 Attribution
 -----------
