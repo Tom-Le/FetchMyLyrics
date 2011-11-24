@@ -18,6 +18,8 @@
 
 %config(generator=internal)
 
+%group iOS5
+
 %hook MediaApplication
 
 /*
@@ -107,5 +109,14 @@
 }
 
 %end
+
+%end
+
+%ctor
+{
+    NSString *iOSVersion = [[UIDevice currentDevice] systemVersion];
+    if ([iOSVersion compare:@"5.0" options:NSNumericSearch] != NSOrderedAscending)
+        %init(iOS5);
+}
 
 // MIT admit me pl0x kthx love u too

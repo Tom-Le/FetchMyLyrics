@@ -20,9 +20,10 @@ mv obj/FML obj/FML.app/
 cp Resources/* obj/FML.app/
 
 echo "Transferring files..."
-scp -q -P    $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -q -P    $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -q -r -P $FML_PORTNO obj/FML.app root@localhost:/Applications/
+scp -q -P $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -q -P $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -q -P $FML_PORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/ 
+# scp -q -r -P $FML_PORTNO obj/FML.app root@localhost:/Applications/
 
 echo "Respringing..."
 ssh -p $FML_PORTNO -l root localhost killall SpringBoard
