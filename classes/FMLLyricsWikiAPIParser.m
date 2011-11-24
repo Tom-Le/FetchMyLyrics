@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLLyricsWikiAPIParser.xm
+ * FMLLyricsWikiAPIParser.m
  * FetchMyLyrics
  *
  * Copyright (C) 2011 by Le Son.

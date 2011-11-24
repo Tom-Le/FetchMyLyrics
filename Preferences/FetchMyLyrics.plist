@@ -23,7 +23,7 @@
             <key>key</key>
             <string>FMLEnable</string>
             <key>label</key>
-            <string>Enabled</string>
+            <string>FetchMyLyrics</string>
         </dict>
         <dict>
             <key>cell</key>
@@ -37,7 +37,7 @@
             <key>key</key>
             <string>FMLOperation</string>
             <key>label</key>
-            <string>Fetch lyrics from</string>
+            <string>Source</string>
             <key>validValues</key>
             <array>
                 <string>FMLAZLyricsOperation</string>

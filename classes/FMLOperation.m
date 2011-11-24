@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLOperation.xm
+ * FMLOperation.m
  * FetchMyLyrics
  *
  * Copyright (C) 2011 by Le Son.

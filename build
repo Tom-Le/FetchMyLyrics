@@ -5,21 +5,24 @@
 # iDevice (otherwise it would ask for your password every time and that would
 # be a pain in the ass.
 
-# Can supply 1 argument for port number; default is 2222.
-
-if [ -n "$1" ]
+if [ -n "$2" ]
 then
-    FML_PORTNO="$1"
+    FML_PORTNO="$2"
 else
     FML_PORTNO="2222"
 fi
 
 make
 
+echo "Making bundle..."
+mkdir -p obj/FML.app
+mv obj/FML obj/FML.app/
+cp Resources/* obj/FML.app/
+
 echo "Transferring files..."
-scp -P $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -P $FML_PORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/
+scp -q -P    $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -q -P    $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
+scp -q -r -P $FML_PORTNO obj/FML.app root@localhost:/Applications/
 
 echo "Respringing..."
 ssh -p $FML_PORTNO -l root localhost killall SpringBoard

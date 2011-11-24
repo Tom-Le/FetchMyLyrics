@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLLyricsWikiPageParser.xm
+ * FMLLyricsWikiPageParser.m
  * FetchMyLyrics
  *
  * NOTE: This class is HIGHLY error prone.

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLAZLyricsPageParser.xm
+ * FMLAZLyricsPageParser.m
  * FetchMyLyrics
  *
  * NOTE: This class is HIGHLY error prone.
