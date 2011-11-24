@@ -12,6 +12,8 @@ your iDevice.
 `./headers`. Note that compilation errors might result from headers
 that need editing; check the error log when compiling.
 
+There's a binary copy in case anyone wants to try. The tweak works, but
+is a bit limited in functionality, and is very much incomplete.
 
 Todo
 -----
