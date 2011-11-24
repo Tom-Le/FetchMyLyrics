@@ -19,6 +19,8 @@
 #import "FMLLyricsWikiOperation.h"
 #import "FMLAZLyricsOperation.h"
 
+#import <objc-runtime.h>
+
 #define FMLLyricsStorageFolder @"~/Library/FetchMyLyrics/"
 
 @implementation FMLController
@@ -67,12 +69,12 @@
 
             // Start a new task to fetch the lyrics
             NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
-            FMLOperation *operation;
-            if ([operationKey isEqualToString:@"FMLLyricsWikiOperation"])
-                operation = [FMLLyricsWikiOperation operation];
-            else if ([operationKey isEqualToString:@"FMLAZLyricsOperation"])
-                operation = [FMLAZLyricsOperation operation];
-                //operation = [FMLAZLyricsOperation operation];
+            FMLOperation *operation = [[NSClassFromString(operationKey) alloc] init];
+            //if ([operationKey isEqualToString:@"FMLLyricsWikiOperation"])
+            //    operation = [FMLLyricsWikiOperation operation];
+            //else if ([operationKey isEqualToString:@"FMLAZLyricsOperation"])
+            //    operation = [FMLAZLyricsOperation operation];
+            //    //operation = [FMLAZLyricsOperation operation];
 
             if (operation)
             {

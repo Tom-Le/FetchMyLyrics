@@ -12,17 +12,11 @@
 
 @interface FMLAZLyricsPageParser : NSObject <UIWebViewDelegate> {
     NSURL *_URLToPage;
-    BOOL _done;
-    UIWebView *_scraperWebView;
-    UIWindow *_dummyWindow;
-    NSString *_lyrics;
+    NSAutoreleasePool *_pool;
 }
 
 @property (nonatomic, copy) NSURL *URLToPage;
-@property (nonatomic, readonly, getter=isDone) BOOL done;
-@property (nonatomic, readonly) NSString *lyrics;
 
-- (void)beginParsing;
-- (void)pollForPageLoadCompletion;
+- (NSString *)lyricsFromParsing;
 
 @end

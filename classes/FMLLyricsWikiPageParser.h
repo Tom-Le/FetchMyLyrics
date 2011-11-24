@@ -16,6 +16,7 @@
     UIWebView *_scraperWebView;
     UIWindow *_dummyWindow;
     NSString *_lyrics;
+    NSAutoreleasePool *_pool;
 }
 
 @property (nonatomic, copy) NSURL *URLToPage;

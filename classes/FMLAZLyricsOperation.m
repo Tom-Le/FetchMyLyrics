@@ -114,23 +114,13 @@
 
         // SECOND STEP: Fetch lyrics
 
-        // Set up synchronous parser
-        // (Read FMLLyricsWikiOperation.xm for an explanation on why I chose to make my parser synchronous)
+        // Set up parser
         FMLAZLyricsPageParser *pageParser = [[[FMLAZLyricsPageParser alloc] init] autorelease];
         pageParser.URLToPage = URLToPage;
-        [pageParser beginParsing];
-
-        // Busy waiting
-        while (!pageParser.done)
-        {
-            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
-                return;
-            [NSThread sleepForTimeInterval:0.2];
-        }
-
-        // Grab the lyrics (woooooo)
-        if (pageParser.lyrics)
-            self.lyrics = pageParser.lyrics;
+        // Fetch lyrics (woooooo)
+        NSString *lyrics = [pageParser lyricsFromParsing];
+        if (lyrics)
+            self.lyrics = [lyrics copy];
     }
     @catch (id e)
     {

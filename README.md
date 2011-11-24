@@ -8,11 +8,10 @@ Compilation notes
 - Need `MediaPlayer.framework` (public) and `iPodUI.framework` (private).
 Included with Xcode 4.2, but if you're not on a Mac, you can get it from
 your iDevice.
-- Need a class-dump from the above frameworks. Drop the headers in
-`./headers`.
-- Make use of Dustin Howett's excellent [theos][theos-link].
+- Need a class dump from the above frameworks. Drop the headers in
+`./headers`. Note that compilation errors might result from headers
+that need editing; check the error log when compiling.
 
-[theos-link]:[https://github.com/DHowett/theos]
 
 Todo
 -----
@@ -24,8 +23,19 @@ by a bunch of source code.
 
 License
 -------
-WTFPL. Attribution would be really nice, but not necessary. Would be
-really, really, really nice though... :3
+MIT license, included with this repo.
+
+Attribution
+-----------
+This tweak makes use of the following works:
+- [theos][theos-link] by Dustin Howett. Awesome framework.
+- [class-dump][class-dump-link] by Steve Nygard.
+- MobileSubstrate by saurik. (I suppose you'd have known this by now)
+
+[theos-link]:[https://github.com/DHowett/theos]
+[class-dump-link]:[http://www.codethecode.com/projects/class-dump/]
+
+So, yeah, thanks! Hugs and kisses! :3
 
 About
 -----
