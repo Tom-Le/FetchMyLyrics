@@ -19,8 +19,6 @@
 #import "FMLLyricsWikiOperation.h"
 #import "FMLAZLyricsOperation.h"
 
-#import <objc-runtime.h>
-
 #define FMLLyricsStorageFolder @"~/Library/FetchMyLyrics/"
 
 @implementation FMLController
@@ -120,9 +118,12 @@
     BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
     if (_ready && enabled)
     {
-        for (FMLLyricsWrapper *lw in _lyricsWrappers)
-            if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
-                return lw.lyrics; 
+        @synchronized(_lyricsWrappers)
+        {
+            for (FMLLyricsWrapper *lw in _lyricsWrappers)
+                if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
+                    return lw.lyrics; 
+        }
     }
 
     // Found nothing or wasn't ready
@@ -140,10 +141,7 @@
         BOOL duplicate = NO;
         for (FMLLyricsWrapper *lw in _lyricsWrappers)
             if ([lw.title isEqualToString:operation.title] && [lw.artist isEqualToString:operation.artist]) 
-            {
-                lw.lyrics = operation.lyrics;
                 duplicate = YES;
-            }
 
         if (!duplicate)
         {
@@ -152,7 +150,10 @@
             wrapper.title = operation.title;
             wrapper.artist = operation.artist;
             wrapper.lyrics = operation.lyrics;
-            [_lyricsWrappers addObject:wrapper];
+            @synchronized(_lyricsWrappers)
+            {
+                [_lyricsWrappers addObject:wrapper];
+            }
 
             [self writeToLyricsStorageFile];
         }
@@ -250,6 +251,7 @@
     if ((self = [super init]))
     {
         _lyricsFetchOperationQueue = [[NSOperationQueue alloc] init];
+        [_lyricsFetchOperationQueue setName:@"com.uglycathasnodomain.FetchMyLyrics.LyricsFetchOperations"];
         _lyricsWrappers = [[NSMutableArray alloc] init];
         _ready = NO;
     }

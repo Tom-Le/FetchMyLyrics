@@ -25,8 +25,6 @@
         _dummyWindow = nil;
         _done = YES;
         _lyrics = nil;
-
-        _pool = [[NSAutoreleasePool alloc] init];
     }
 
     return self;
@@ -46,8 +44,6 @@
         [_lyrics release];
 
     self.URLToPage = nil;
-
-    [_pool release];
 
     [super dealloc];
 }

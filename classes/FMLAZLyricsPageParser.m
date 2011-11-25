@@ -21,8 +21,6 @@
     if ((self = [super init]))
     {
         _URLToPage = nil;
-
-        _pool = [[NSAutoreleasePool alloc] init];
     }
 
     return self;
@@ -31,8 +29,6 @@
 - (void)dealloc
 {
     self.URLToPage = nil;
-
-    [_pool release];
 
     [super dealloc];
 }

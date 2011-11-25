@@ -12,7 +12,6 @@
 
 @interface FMLAZLyricsPageParser : NSObject <UIWebViewDelegate> {
     NSURL *_URLToPage;
-    NSAutoreleasePool *_pool;
 }
 
 @property (nonatomic, copy) NSURL *URLToPage;

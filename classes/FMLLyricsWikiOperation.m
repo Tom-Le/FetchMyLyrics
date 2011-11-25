@@ -81,6 +81,8 @@
  */
 - (void)main
 {
+    DebugLog(@"Starting operation for %@ by %@", self.title, self.artist);
+
     _pool = [[NSAutoreleasePool alloc] init];
 
     @try
@@ -190,6 +192,8 @@
         [_pool release];
         _pool = nil;
     }
+
+    DebugLog(@"Ending operation for %@ by %@", self.title, self.artist);
 }
 
 /*

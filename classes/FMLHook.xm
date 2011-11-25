@@ -121,6 +121,20 @@
 
 %end
 
+//%hook MPPlaybackControlsView
+//
+///*
+// * Hook: - [MPPlaybackControlsView layoutSubviews]
+// * Goal: Add a button to the now playing view that lets the user configure FML.
+// */
+//- (void)layoutSubviews
+//{
+//    DebugLog(@"Playback controls being laid out.");
+//    %orig;
+//}
+//
+//%end
+
 %end
 
 %ctor
