@@ -67,7 +67,7 @@
 
             // Start a new task to fetch the lyrics
             NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
-            FMLOperation *operation = [[NSClassFromString(operationKey) alloc] init];
+            FMLOperation *operation = [[[NSClassFromString(operationKey) alloc] init] autorelease];
 
             if (operation)
             {
