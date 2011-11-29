@@ -81,8 +81,6 @@
  */
 - (void)main
 {
-    DebugLog(@"Starting operation for %@ by %@", self.title, self.artist);
-
     _pool = [[NSAutoreleasePool alloc] init];
 
     @try
@@ -122,7 +120,7 @@
         {
             if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
                 return;
-            [NSThread sleepForTimeInterval:0.2];
+            [NSThread sleepForTimeInterval:0.1];
         }
         
         // Grab the URL
@@ -148,7 +146,7 @@
         {
             if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
                 return;
-            [NSThread sleepForTimeInterval:0.2];
+            [NSThread sleepForTimeInterval:0.1];
         }
 
         // Grab the lyrics (woooooo)
@@ -192,8 +190,6 @@
         [_pool release];
         _pool = nil;
     }
-
-    DebugLog(@"Ending operation for %@ by %@", self.title, self.artist);
 }
 
 /*
