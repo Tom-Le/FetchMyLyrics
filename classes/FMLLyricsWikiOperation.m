@@ -9,7 +9,6 @@
 
 #import "FMLLyricsWikiOperation.h"
 
-#import <iPodUI/IUMediaQueryNowPlayingItem.h>
 #import "FMLLyricsWrapper.h"
 #import "FMLLyricsWikiAPIParser.h"
 #import "FMLLyricsWikiPageParser.h"
@@ -30,7 +29,6 @@
         _title = nil;
         _artist = nil;
         _lyrics = nil;
-        _nowPlayingItem = nil;
 
         _pool = nil;
 
@@ -57,7 +55,7 @@
 - (void)start
 {
     // If operation is cancelled, return
-    if ([self.nowPlayingItem hasDisplayableText] || [self isCancelled])
+    if ([self isCancelled])
     {
         // Mark operation as finished
         [self willChangeValueForKey:@"isFinished"];
@@ -81,15 +79,16 @@
  */
 - (void)main
 {
+    DebugLog(@"Starting operation: %@ by %@", self.title, self.artist);
+
     _pool = [[NSAutoreleasePool alloc] init];
 
     @try
     {
         // FIRST STEP: Ask LyricsWiki API for song data.
 
-        // Note: periodically check [self.nowPlayingItem hasDisplayableText]
-        // if at any time this returns yes, abort operation.
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+        // Periodical check
+        if ([self isCancelled])
             return;
 
         // Form URL for request
@@ -104,7 +103,7 @@
         //              for your filthy hands. </endrant> (((sorry to whoever reading my code)))
 
         // Periodic check
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+        if ([self isCancelled])
             return;
         
         // Set up synchronous parser.
@@ -133,10 +132,13 @@
         // THIRD STEP: Visit lyrics page and parse for the lyrics (in plain text)
 
         // Periodic check
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+        if ([self isCancelled])
             return;
 
         // Set up synchronous parser.
+        // I chose this model (instead of an asynchronous parser that can for eg. notify this instance
+        // when it's done) because it would keep our task wrapped in - (void)main which is IMO
+        // 10000x cleaner. Of course, if performance issues arise, I'll rethink my choices.
         FMLLyricsWikiPageParser *pageParser = [[[FMLLyricsWikiPageParser alloc] init] autorelease];
         pageParser.URLToPage = [NSURL URLWithString:URLStringToLyricsPage];
         [pageParser beginParsing];
@@ -144,7 +146,7 @@
         // Busy waiting
         while (!pageParser.done)
         {
-            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+            if ([self isCancelled])
                 return;
             [NSThread sleepForTimeInterval:0.1];
         }
@@ -190,6 +192,8 @@
         [_pool release];
         _pool = nil;
     }
+
+    DebugLog(@"Ending operation: %@ by %@", self.title, self.artist);
 }
 
 /*
@@ -216,7 +220,6 @@
     self.title = nil;
     self.artist = nil;
     self.lyrics = nil;
-    self.nowPlayingItem = nil;
 
     [super dealloc];
 }

@@ -11,7 +11,7 @@
 
 #import "FMLOperation.h"
 
-@class FMLController, FMLLyricsWrapper, FMLLyricsWikiAPIParser, FMLLyricsWikiPageParser, IUMediaQueryNowPlayingItem;
+@class FMLController, FMLLyricsWrapper, FMLLyricsWikiAPIParser, FMLLyricsWikiPageParser;
 
 @interface FMLLyricsWikiOperation : FMLOperation { 
     NSAutoreleasePool *_pool;

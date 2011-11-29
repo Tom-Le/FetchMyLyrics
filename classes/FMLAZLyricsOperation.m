@@ -9,7 +9,6 @@
 
 #import "FMLAZLyricsOperation.h"
 
-#import <iPodUI/IUMediaQueryNowPlayingItem.h>
 #import "FMLAZLyricsPageParser.h"
 #import "FMLLyricsWrapper.h"
 #import "FMLController.h"
@@ -29,7 +28,6 @@
         _title = nil;
         _artist = nil;
         _lyrics = nil;
-        _nowPlayingItem = nil;
 
         _pool = nil;
         
@@ -56,7 +54,7 @@
 - (void)start
 {
     // If operation is cancelled, return
-    if ([self.nowPlayingItem hasDisplayableText] || [self isCancelled])
+    if ([self isCancelled])
     {
         // Mark operation as finished
         [self willChangeValueForKey:@"isFinished"];
@@ -87,7 +85,7 @@
         // FIRST STEP: URL.
 
         // Periodic check.
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+        if ([self isCancelled])
             return;
 
         NSError *error = NULL;
@@ -109,7 +107,7 @@
         NSURL *URLToPage = [NSURL URLWithString:URLStringToPage];
 
         // Periodic check.
-        if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
+        if ([self isCancelled])
             return;
 
         // SECOND STEP: Fetch lyrics
@@ -183,7 +181,6 @@
     self.title = nil;
     self.artist = nil;
     self.lyrics = nil;
-    self.nowPlayingItem = nil;
 
     [super dealloc];
 }

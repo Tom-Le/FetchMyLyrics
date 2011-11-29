@@ -55,15 +55,25 @@
             NSString *title = [[item mediaItem] valueForProperty:@"title"];
             NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
 
+            // Some items have no artist and title (IDK why)
+            if ((title == nil) || (artist == nil))
+                return;
+
             // If FMLController already has lyrics for the song, return.
-            for (FMLLyricsWrapper *lw in _lyricsWrappers)
-                if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
-                    return;
+            @synchronized(_lyricsWrappers)
+            {
+                for (FMLLyricsWrapper *lw in _lyricsWrappers)
+                    if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
+                        return;
+            }
 
             // If a task is already running for the song requested, return.
-            for (FMLLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
-                if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
-                    return;
+            @synchronized(_lyricsFetchOperationQueue)
+            {
+                for (FMLLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
+                    if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
+                        return;
+            }
 
             // Start a new task to fetch the lyrics
             NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
@@ -73,7 +83,6 @@
             {
                 operation.title = title;
                 operation.artist = artist;
-                operation.nowPlayingItem = item;
                 [_lyricsFetchOperationQueue addOperation:operation];
             }
         });
@@ -102,8 +111,10 @@
 {
     if (_currentInfoOverlay)
     {
+        DebugLog(@"Item: %@", _currentInfoOverlay.item);
+
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [_currentInfoOverlay _updateDisplayableTextViewForItem:_currentInfoOverlay.item
+            [_currentInfoOverlay _reloadDisplayableTextViewForItem:_currentInfoOverlay.item
                                                            animate:YES];
         }];
     }
@@ -252,6 +263,7 @@
     {
         _lyricsFetchOperationQueue = [[NSOperationQueue alloc] init];
         [_lyricsFetchOperationQueue setName:@"com.uglycathasnodomain.FetchMyLyrics.LyricsFetchOperations"];
+
         _lyricsWrappers = [[NSMutableArray alloc] init];
         _ready = NO;
     }

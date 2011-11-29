@@ -9,12 +9,11 @@
 
 #import "FMLOperation.h"
 
-#import <iPodUI/IUMediaQueryNowPlayingItem.h>
 #import "FMLCommon.h"
 
 @implementation FMLOperation
 
-@synthesize title = _title, artist = _artist, lyrics = _lyrics, nowPlayingItem = _nowPlayingItem;
+@synthesize title = _title, artist = _artist, lyrics = _lyrics;
 
 /*
  * Initialization
@@ -75,7 +74,6 @@
     self.title = nil;
     self.artist = nil;
     self.lyrics = nil;
-    self.nowPlayingItem = nil;
 
     [super dealloc];
 }
