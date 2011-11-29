@@ -51,26 +51,25 @@
 
 %end
 
-%hook IUMediaQueryNowPlayingItem
+%hook MPQueueFeeder
 
 /*
- * Hook   : - [IUMediaQueryNowPlayingItem initWithMediaItem:]
- * Goal   : Report to shared FMLController instance every time a song is going
- *          to be played, so the instance can have a chance to prepare lyrics.
- * Caveats: Not sure if this is the right place to hook to.
+ * Hook  : - [MPQueueFeeder itemForIndex:]
+ * Goal  : Hijack this method to notify FMLController of upcoming now playing items
+ *         so that the controller can start lyrics fetching operations.
+ * Caveat: Still not sure if this is the right place to hook.
  */
-- (id)initWithMediaItem:(id)mediaItem
+- (id)itemForIndex:(unsigned int)index
 {
-    id ret = %orig;
-    if (mediaItem && ret)
-        if ([@"IUMediaQueryNowPlayingItem" isEqualToString:[NSString stringWithUTF8String:object_getClassName(ret)]])
-        {
-            IUMediaQueryNowPlayingItem *item = (IUMediaQueryNowPlayingItem *)ret;
-            [[FMLController sharedController] handleSongWithNowPlayingItem:item]; 
-        }
+    id item = %orig;
+    [[FMLController sharedController] handleSongWithNowPlayingItem:item];
 
-    return ret;
+    return item;
 }
+
+%end
+
+%hook IUMediaQueryNowPlayingItem
 
 /*
  * Hook: - [IUMediaQueryNowPlayingItem displayableText]
@@ -121,22 +120,11 @@
 
 %end
 
-//%hook MPPlaybackControlsView
-//
-///*
-// * Hook: - [MPPlaybackControlsView layoutSubviews]
-// * Goal: Add a button to the now playing view that lets the user configure FML.
-// */
-//- (void)layoutSubviews
-//{
-//    DebugLog(@"Playback controls being laid out.");
-//    %orig;
-//}
-//
-//%end
-
 %end
 
+/*
+ * Initialization.
+ */
 %ctor
 {
     NSString *iOSVersion = [[UIDevice currentDevice] systemVersion];
