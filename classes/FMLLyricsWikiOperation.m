@@ -10,7 +10,6 @@
 #import "FMLLyricsWikiOperation.h"
 
 #import "FMLLyricsWrapper.h"
-#import "FMLLyricsWikiAPIParser.h"
 #import "FMLLyricsWikiPageParser.h"
 #import "FMLController.h"
 #import "FMLCommon.h"
@@ -105,26 +104,25 @@
         // Periodic check
         if ([self isCancelled])
             return;
-        
-        // Set up synchronous parser.
-        // I chose this model (instead of an asynchronous parser that can for eg. notify this instance
-        // when it's done) because it would keep our task wrapped in - (void)main which is IMO
-        // 10000x cleaner. Of course, if performance issues arise, I'll rethink my choices.
-        FMLLyricsWikiAPIParser *APIParser = [[[FMLLyricsWikiAPIParser alloc] init] autorelease];
-        APIParser.URLToAPIPage = APIRequestURL;
-        [APIParser beginParsing];
-        
-        // Busy waiting (won't lock up the UI, we're on a separate thread, so don't look so scared)
-        while (!APIParser.done)
-        {
-            if ([self isCancelled] || [self.nowPlayingItem hasDisplayableText])
-                return;
-            [NSThread sleepForTimeInterval:0.1];
-        }
-        
-        // Grab the URL
-        NSString *URLStringToLyricsPage = [[APIParser.URLStringToLyricsPage copy] autorelease];
 
+        // Download XML file
+        NSData *APIData = [NSData dataWithContentsOfURL:APIRequestURL];
+        NSString *APIString = [[[NSString alloc] initWithData:APIData
+                                                     encoding:NSUTF8StringEncoding] autorelease];
+        // Set up regex for parsing
+        NSRegularExpression *regexAPI = [NSRegularExpression regularExpressionWithPattern:@"<url>(.*)</url>"
+                                                                                  options:NSRegularExpressionCaseInsensitive
+                                                                                    error:nil];
+        __block NSString *URLStringToLyricsPage = nil;
+        // Parse
+        [regexAPI enumerateMatchesInString:APIString
+                                   options:0
+                                     range:NSMakeRange(0, [APIString length])
+                                usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                                    NSRange matchRange = [result rangeAtIndex:1];
+                                    URLStringToLyricsPage = [APIString substringWithRange:matchRange];
+                                }];
+        
         // If the URL doesn't exist, return.
         if (!URLStringToLyricsPage)
             return;

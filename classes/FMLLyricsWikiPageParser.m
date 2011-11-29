@@ -63,7 +63,7 @@
         NSString *pageHTML = [[[NSString alloc] initWithData:data
                                                     encoding:NSUTF8StringEncoding] autorelease];
 
-        NSRegularExpression *regexHTML = [NSRegularExpression regularExpressionWithPattern:@"(?:<div class='lyricbox'><div class='rtMatcher'>.*</div>)(.*)(?:<!--)"
+        NSRegularExpression *regexHTML = [NSRegularExpression regularExpressionWithPattern:@"<div class='lyricbox'><div class='rtMatcher'>.*</div>(.*)<!--"
                                                                                options:NSRegularExpressionCaseInsensitive
                                                                                  error:nil];
         __block NSString *lyricsHTMLEncoded = nil;

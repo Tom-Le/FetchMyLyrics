@@ -6,7 +6,6 @@ FetchMyLyrics_FILES = classes/FMLHook.xm \
 					  classes/FMLOperation.m \
 					  classes/FMLLyricsWrapper.m \
 					  classes/FMLLyricsWikiOperation.m \
-					  classes/FMLLyricsWikiAPIParser.m \
 					  classes/FMLLyricsWikiPageParser.m \
 					  classes/FMLAZLyricsOperation.m \
 					  classes/FMLAZLyricsPageParser.m
