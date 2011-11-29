@@ -13,12 +13,14 @@ FetchMyLyrics_FILES = classes/FMLHook.xm \
 FetchMyLyrics_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 
+DEBUG = 1
+
 APPLICATION_NAME = FML
 FML_FILES = classes/FMLApp-main.m \
 			classes/FMLAppDelegate.m \
 			classes/FMLRootViewController.m
 
-CFLAGS = -I./classes -I./headers -I/usr/include/objc 
+CFLAGS = -I./classes -I./headers -I/usr/include/objc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS_MAKE_PATH)/application.mk
