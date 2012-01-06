@@ -5,25 +5,27 @@
 # iDevice (otherwise it would ask for your password every time and that would
 # be a pain in the ass.
 
-if [ -n "$2" ]
-then
-    FML_PORTNO="$2"
-else
-    FML_PORTNO="2222"
-fi
+# Also, configure your .ssh/config
+# Example: (in .ssh/config)
+# Hosts ipod
+#      User     root
+#      Port     2222           or whatever you used while running tcprelay.py
+#      HostName localhost
+
+export THEOS="./theos"
 
 make
 
 echo "Making bundle..."
 mkdir -p obj/FML.app
-mv obj/FML obj/FML.app/
+cp obj/FML obj/FML.app/
 cp Resources/* obj/FML.app/
 
 echo "Transferring files..."
-scp -q -P $FML_PORTNO obj/FetchMyLyrics.dylib root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -q -P $FML_PORTNO FetchMyLyrics.plist root@localhost:/Library/MobileSubstrate/DynamicLibraries/
-scp -q -P $FML_PORTNO Preferences/FetchMyLyrics.plist root@localhost:/Library/PreferenceLoader/Preferences/ 
-# scp -q -r -P $FML_PORTNO obj/FML.app root@localhost:/Applications/
+scp -q obj/FetchMyLyrics.dylib         ipod://Library/MobileSubstrate/DynamicLibraries/
+scp -q FetchMyLyrics.plist             ipod://Library/MobileSubstrate/DynamicLibraries/
+scp -q Preferences/FetchMyLyrics.plist ipod://Library/PreferenceLoader/Preferences/ 
+# scp -q -r obj/FML.app                  ipod://Applications/
 
 echo "Respringing..."
-ssh -p $FML_PORTNO -l root localhost killall SpringBoard
+ssh ipod killall SpringBoard
