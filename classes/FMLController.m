@@ -2,6 +2,8 @@
  * FMLController.m
  * FetchMyLyrics
  *
+ * Warning: God object.
+ *
  * Copyright (C) 2011 by Le Son.
  * Licensed under the MIT License, bundled with the source or available here:
  *     https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
@@ -114,7 +116,7 @@
         DebugLog(@"Item: %@", _currentInfoOverlay.item);
 
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [_currentInfoOverlay _reloadDisplayableTextViewForItem:_currentInfoOverlay.item
+            [_currentInfoOverlay _updateDisplayableTextViewForItem:_currentInfoOverlay.item
                                                            animate:YES];
         }];
     }
@@ -133,7 +135,9 @@
         {
             for (FMLLyricsWrapper *lw in _lyricsWrappers)
                 if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
+                {
                     return lw.lyrics; 
+                }
         }
     }
 
