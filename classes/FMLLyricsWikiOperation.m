@@ -119,6 +119,7 @@
                                    options:0
                                      range:NSMakeRange(0, [APIString length])
                                 usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                                    // Index 0 = range for all matched string including <url> and </url> => not what we want
                                     NSRange matchRange = [result rangeAtIndex:1];
                                     URLStringToLyricsPage = [APIString substringWithRange:matchRange];
                                 }];
