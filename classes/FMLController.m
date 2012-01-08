@@ -113,8 +113,6 @@
 {
     if (_currentInfoOverlay)
     {
-        DebugLog(@"Item: %@", _currentInfoOverlay.item);
-
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [_currentInfoOverlay _updateDisplayableTextViewForItem:_currentInfoOverlay.item
                                                            animate:YES];
