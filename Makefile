@@ -12,13 +12,13 @@ THEOS_DEVICE_IP   = localhost
 
 # Tweak meta
 TWEAK_NAME = FetchMyLyrics
-FetchMyLyrics_FILES = classes/FMLHook.xm \
-					  classes/FMLController.m \
-					  classes/FMLOperation.m \
-					  classes/FMLLyricsWrapper.m \
-					  classes/FMLLyricsWikiOperation.m \
-					  classes/FMLLyricsWikiPageParser.m \
-					  classes/FMLAZLyricsOperation.m
+FetchMyLyrics_FILES = src/FMLHook.xm \
+					  src/FMLController.m \
+					  src/FMLOperation.m \
+					  src/FMLLyricsWrapper.m \
+					  src/FMLLyricsWikiOperation.m \
+					  src/FMLLyricsWikiPageParser.m \
+					  src/FMLAZLyricsOperation.m
 FetchMyLyrics_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
