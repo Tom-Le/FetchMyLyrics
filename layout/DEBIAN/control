@@ -1,0 +1,12 @@
+Package: com.nerdycat.fetchmylyrics
+Depends: mobilesubstrate, preferenceloader, firmware (>= 5.0)
+Name: FetchMyLyrics
+Version: 0.0.2
+Priority: optional
+Architecture: iphoneos-arm
+Description: Automatically download lyrics from the Internet for Music.app/iPod.app.
+Homepage: http://fetchmylyrics.nerdycat.com/
+Depiction: http://fetchmylyrics.nerdycat.com/
+Maintainer: Tom Cat <tomthecat94+fetchmylyrics@gmail.com>
+Author: Tom Cat <tomthecat94+fetchmylyrics@gmail.com>
+Section: Addons
