@@ -134,5 +134,5 @@
 
 // Hey, if you're a college admission officer reading this source code
 // because you found a mention to this tweak in one of my essays,
-// THANK YOU FINE SIR, LET ME OFFER YOU THIS BIG HUG.
+// THANK YOU FINE SIR/MADAM, LET ME OFFER YOU THIS BIG HUG.
 // *hugs*
