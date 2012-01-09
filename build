@@ -16,8 +16,6 @@
 #      Port     2222           or whatever you used while running tcprelay.py
 #      HostName localhost
 
-export THEOS="./theos"
-
 make
 
 echo "Transferring files..."
