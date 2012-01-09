@@ -1,9 +1,16 @@
-# If theos is not present, clone it first
 ifeq ($(shell [ -f ./theos/makefiles/common.mk ] && echo 1 || echo 0),0)
 all clean package install::
-	@git submodule update --init --merge --recursive 2> /dev/null
+	@git submodule update --init --merge --recursive 2> /dev/null # clone theos
 	@$(MAKE) $(MAKEFLAGS) MAKELEVEL=0 $@
 else
+
+ifeq ($(shell [ -f ./theos/bin/ldid ] && echo 1 || echo 0),0)
+all package install::
+	@echo "ERROR: ldid not present in ./theos/bin/"
+	@echo "Find a copy of ldid (on the Internet), then put it in ./theos/bin/"
+	@exit 1
+else
+
 # Absolute path to theos
 THEOS = $(shell cd ./theos/; pwd;)
 # SSH info
@@ -24,9 +31,11 @@ FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 
-CFLAGS = -I./classes -I./headers -I/usr/include/objc
+CFLAGS = -I./src -I./headers -I/usr/include/objc
 
 include ./theos/makefiles/common.mk
 include ./theos/makefiles/tweak.mk
+
+endif
 
 endif
