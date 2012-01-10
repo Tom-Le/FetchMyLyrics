@@ -8,15 +8,10 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import <MediaPlayer/MPMediaItem.h>
-#import <iPodUI/IUMediaQueryNowPlayingItem.h>
-//#import <iPodUI/IUNowPlayingAlbumFrontViewController.h> // not really needed
-//#import <iPodUI/IUNowPlayingPortraitViewController.h>
+#import <objc-runtime.h>
 
 #import "FMLController.h"
 #import "FMLCommon.h"
-
-%config(generator=internal)
 
 %group iOS5
 
@@ -85,8 +80,9 @@
     NSString *lyrics = (NSString *)%orig;
     if (lyrics == nil)
     {
-        NSString *title = [[self mediaItem] valueForProperty:@"title"];
-        NSString *artist = [[self mediaItem] valueForProperty:@"artist"];
+        id mediaItem = objc_msgSend(self, @selector(mediaItem));
+        NSString *title = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
+        NSString *artist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
         return [[FMLController sharedController] lyricsForSongWithTitle:title artist:artist];
     }
 

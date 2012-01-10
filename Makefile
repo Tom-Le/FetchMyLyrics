@@ -28,10 +28,13 @@ FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLAZLyricsOperation.m
 FetchMyLyrics_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
+FetchMyLyrics_CFLAGS = -I./src -I./headers -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 
-CFLAGS = -I./src -I./headers -I/usr/include/objc
+# Uncomment the following lines (and modify as appropriate) if you are
+# not on OS X, and want to specify a custom location for the frameworks
+# FetchMyLyrics_LDFLAGS = -F/path/to/Frameworks -F/path/to/PrivateFrameworks
 
 include ./theos/makefiles/common.mk
 include ./theos/makefiles/tweak.mk

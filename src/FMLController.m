@@ -9,13 +9,11 @@
  *     https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
  ******************************************************************************/
 
+#import <objc-runtime.h>
+
 #import "FMLController.h"
 #import "FMLCommon.h"
 
-#import <iPodUI/IUMediaQueryNowPlayingItem.h>
-#import <MediaPlayer/MPMediaItem.h>
-#import <MediaPlayer/MPPortraitInfoOverlay.h>
-#import <MediaPlayer/MPAVItem.h>
 #import "FMLLyricsWrapper.h"
 #import "FMLOperation.h"
 #import "FMLLyricsWikiOperation.h"
@@ -33,7 +31,7 @@
  * Note    : This method has to return as quickly as possible or the 
  *           UI will lock up badly.
  */
-- (void)handleSongWithNowPlayingItem:(IUMediaQueryNowPlayingItem *)item
+- (void)handleSongWithNowPlayingItem:(id)item
 {
     // Since this method has to return ASAP, the whole task will be shoved
     // to another operation queue.
@@ -50,12 +48,14 @@
             // NOTE: Block inherits every ivar as well as local vars
 
             // If the song already has lyrics, return.
-            if ([item hasDisplayableText])
+            BOOL hasDisplayableText = ((BOOL (*)(id, SEL, ...))objc_msgSend)(item, @selector(hasDisplayableText));
+            if (hasDisplayableText)
                 return;
      
             // Song info
-            NSString *title = [[item mediaItem] valueForProperty:@"title"];
-            NSString *artist = [[item mediaItem] valueForProperty:@"artist"];
+            id mediaItem = objc_msgSend(item, @selector(mediaItem));
+            NSString *title = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
+            NSString *artist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
 
             // Some items have no artist and title (IDK why)
             if ((title == nil) || (artist == nil))
@@ -97,7 +97,7 @@
  *            the now playing UI. In particular, we need a reference to this instance to
  *            update the UI whenever we fetch new lyrics for a song currently played.
  */
-- (void)setCurrentInfoOverlay:(MPPortraitInfoOverlay *)overlay
+- (void)setCurrentInfoOverlay:(id)overlay
 {
     [self ridCurrentInfoOverlay];
     _currentInfoOverlay = [overlay retain];
@@ -114,8 +114,8 @@
     if (_currentInfoOverlay)
     {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [_currentInfoOverlay _updateDisplayableTextViewForItem:_currentInfoOverlay.item
-                                                           animate:YES];
+            id item = objc_msgSend(_currentInfoOverlay, @selector(item));
+            objc_msgSend(_currentInfoOverlay, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
         }];
     }
 }
@@ -176,8 +176,9 @@
         BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
         if (enabled)
         {
-            NSString *nowPlayingTitle = _currentInfoOverlay.item.mainTitle; 
-            NSString *nowPlayingArtist = _currentInfoOverlay.item.artist;
+            id item = objc_msgSend(_currentInfoOverlay, @selector(item));
+            NSString *nowPlayingTitle = (NSString *)objc_msgSend(item, @selector(mainTitle)); 
+            NSString *nowPlayingArtist = (NSString *)objc_msgSend(item, @selector(artist));
             if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
                 [self reloadDisplayableTextView];
         }
