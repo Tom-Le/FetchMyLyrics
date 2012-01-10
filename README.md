@@ -1,37 +1,19 @@
-MobileSubstrate tweak that helps Music.app/iPod.app grabs lyrics from the
-Internet. Compatible with iOS 5. (Working on compatibility with iOS 4.)
-Roughly tested on a third generation iPod touch (my iPod). Downloaded
-lyrics are saved to `/private/var/mobile/Library/FetchMyLyrics/storage`.
+MobileSubstrate tweak to download lyrics from the Internet for Music/iPod.app.
+Compatible with iOS 5; might be compatible with iOS 4 in the future, but no
+guarantees.
 
-Compilation notes
-------------------
-- Need `MediaPlayer.framework` (public) and `iPodUI.framework` (private).
-Included with Xcode 4.2, but if you're not on a Mac, you can get it from
-your iDevice.
-- Need a class dump from the above frameworks. Drop the headers in
-`./headers`. Note that compilation errors might result from headers
-that need editing; check the error log when compiling.
+**Compilation note**: Links to MediaPlayer.framework and iPodUI.framework
+(private). Obtain these from the iOS SDK or your iDevice.
 
-There's a binary copy in case anyone wants to try. The tweak works, but
-is a bit limited in functionality, and is very much incomplete.
+# Todo
+1. Proper GUI. Right now, the tweak obtains lyrics in silence, which is creepy.
+Proper settings page would be nice, too.
 
-Todo
------
-1. Show a button in Now Playing view that indicates the tweak's
-status (disabled, fetching lyrics, enabled).
-2. Non-static preferences, and preferences in Music/iPod.app.
-3. Make a proper website for this because no one likes to be greeted
-by a bunch of source code.
-
-License
--------
-MIT license. The license is included with this repo, or available at
+# License
+MIT license. Included with this repo, or available at
 https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
 
-Attribution
------------
-This tweak makes use of the following works:
-
+# Attribution
 - [theos][theos-link] by Dustin Howett. Awesome framework.
 - [class-dump][class-dump-link] by Steve Nygard.
 - MobileSubstrate by saurik. (I suppose you'd have known this by now)
@@ -39,8 +21,7 @@ This tweak makes use of the following works:
 [theos-link]:[https://github.com/DHowett/theos]
 [class-dump-link]:[http://www.codethecode.com/projects/class-dump/]
 
-So, yeah, thanks! Hugs and kisses! :3
+In short, awesome people.
 
-About
------
-Made by a cute cat who calls himself Tom. :3
+## About
+Name is Tom. Is a cat in human form.
