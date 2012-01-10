@@ -233,14 +233,14 @@
 - (void)writeToLyricsStorageFile
 {
     NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[FMLLyricsStorageFolder stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[FMLLyricsStorageFolder stringByExpandingTildeInPath]
+    if (![manager fileExistsAtPath:[FMLLYRICSSTORAGEFOLDER stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[FMLLYRICSSTORAGEFOLDER stringByExpandingTildeInPath]
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
 
     [NSKeyedArchiver archiveRootObject:_lyricsWrappers
-                                toFile:[[FMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
+                                toFile:[[FMLLYRICSSTORAGEFOLDER stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
 }
 
 #pragma mark Singleton
