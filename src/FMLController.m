@@ -19,7 +19,7 @@
 #import "FMLLyricsWikiOperation.h"
 #import "FMLAZLyricsOperation.h"
 
-#define FMLLyricsStorageFolder @"~/Library/FetchMyLyrics/"
+#define FMLLYRICSSTORAGEFOLDER @"~/Library/FetchMyLyrics/"
 
 @implementation FMLController
 
@@ -213,7 +213,7 @@
     NSMutableArray *storedWrappers;
     @try
     {
-        NSString *path = [[FMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
+        NSString *path = [[FMLLYRICSSTORAGEFOLDER stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
         storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     }
     @catch (id e)
