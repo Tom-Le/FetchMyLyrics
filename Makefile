@@ -39,6 +39,10 @@ TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 include ./theos/makefiles/common.mk
 include ./theos/makefiles/tweak.mk
 
+package::
+	@echo "Cleaning working directory..."
+	@rm -rf $(THEOS_STAGING_DIR)
+
 endif
 
 endif
