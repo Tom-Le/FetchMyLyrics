@@ -72,7 +72,7 @@
             // If a task is already running for the song requested, return.
             @synchronized(_lyricsFetchOperationQueue)
             {
-                for (FMLLyricsWikiOperation *lo in [_lyricsFetchOperationQueue operations])
+                for (FMLOperation *lo in [_lyricsFetchOperationQueue operations])
                     if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
                         return;
             }
