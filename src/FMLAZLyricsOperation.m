@@ -126,10 +126,13 @@
             [lyricsExtractionRegex enumerateMatchesInString:pageHTML
                                                     options:0
                                                       range:NSMakeRange(0, [pageHTML length])
-                                                 usingBlock: ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                                                     NSRange matchRange = [result rangeAtIndex:1];
-                                                     untidiedLyrics = [pageHTML substringWithRange:matchRange];
-                                                 }];
+                                                 usingBlock:
+                ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+                {
+                    NSRange matchRange = [result rangeAtIndex:1];
+                    untidiedLyrics = [pageHTML substringWithRange:matchRange];
+                }];
+
             if (untidiedLyrics)
             {
                 NSRegularExpression *tidyRegex = [NSRegularExpression regularExpressionWithPattern:@"(^\\s+)|(<.*>)|(\\s+$)"

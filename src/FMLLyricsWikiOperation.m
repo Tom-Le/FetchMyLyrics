@@ -10,8 +10,9 @@
 #import "FMLLyricsWikiOperation.h"
 
 #import "FMLLyricsWrapper.h"
-#import "FMLLyricsWikiPageParser.h"
 #import "FMLController.h"
+
+#import "NSRegularExpression+Extra.h"
 #import "FMLCommon.h"
 
 @implementation FMLLyricsWikiOperation
@@ -78,8 +79,6 @@
  */
 - (void)main
 {
-    DebugLog(@"Starting operation: %@ by %@", self.title, self.artist);
-
     _pool = [[NSAutoreleasePool alloc] init];
 
     @try
@@ -118,11 +117,13 @@
         [regexAPI enumerateMatchesInString:APIString
                                    options:0
                                      range:NSMakeRange(0, [APIString length])
-                                usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                                    // Index 0 = range for all matched string including <url> and </url> => not what we want
-                                    NSRange matchRange = [result rangeAtIndex:1];
-                                    URLStringToLyricsPage = [APIString substringWithRange:matchRange];
-                                }];
+                                usingBlock:
+            ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+            {
+                // Index 0 = range for all matched string including <url> and </url> => not what we want
+                NSRange matchRange = [result rangeAtIndex:1];
+                URLStringToLyricsPage = [APIString substringWithRange:matchRange];
+            }];
         
         // If the URL doesn't exist, return.
         if (!URLStringToLyricsPage)
@@ -134,25 +135,76 @@
         if ([self isCancelled])
             return;
 
-        // Set up synchronous parser.
-        // I chose this model (instead of an asynchronous parser that can for eg. notify this instance
-        // when it's done) because it would keep our task wrapped in - (void)main which is IMO
-        // 10000x cleaner. Of course, if performance issues arise, I'll rethink my choices.
-        FMLLyricsWikiPageParser *pageParser = [[[FMLLyricsWikiPageParser alloc] init] autorelease];
-        pageParser.URLToPage = [NSURL URLWithString:URLStringToLyricsPage];
-        [pageParser beginParsing];
-
-        // Busy waiting
-        while (!pageParser.done)
+        NSData *pageHTMLData = [NSData dataWithContentsOfURL:[NSURL URLWithString:URLStringToLyricsPage]];
+        if (pageHTMLData)
         {
-            if ([self isCancelled])
-                return;
-            [NSThread sleepForTimeInterval:0.1];
-        }
+            NSString *pageHTML = [[[NSString alloc] initWithData:pageHTMLData
+                                                       encoding:NSUTF8StringEncoding] autorelease];
 
-        // Grab the lyrics (woooooo)
-        if (pageParser.lyrics)
-            self.lyrics = pageParser.lyrics;
+            // The following part is HIGHLY error prone.
+            // Every time LyricsWiki changes its layout, we'll have to modify this regex (and possibly the rest of this if block)
+            NSRegularExpression *encodedLyricsHTMLRegex = [NSRegularExpression regularExpressionWithPattern:@"<div class='lyricbox'><div class='rtMatcher'>.*</div>(.*)<!--"
+                                                                                                    options:NSRegularExpressionCaseInsensitive
+                                                                                                      error:nil];
+            __block NSString *encodedLyrics = nil;
+            [encodedLyricsHTMLRegex enumerateMatchesInString:pageHTML
+                                                     options:0
+                                                       range:NSMakeRange(0, [pageHTML length])
+                                                  usingBlock:
+                ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+                {
+                    NSRange matchRange = [result rangeAtIndex:1];
+                    encodedLyrics = [pageHTML substringWithRange:matchRange];
+                }];
+
+            if (encodedLyrics)
+            {
+                // Replace HTML entities (&#000;) with human readable chars
+                NSRegularExpression *entityNumbersRegex = [NSRegularExpression regularExpressionWithPattern:@"&#(\\d+);"
+                                                                                                    options:NSRegularExpressionCaseInsensitive
+                                                                                                      error:nil];
+                NSString *untidiedLyrics = [entityNumbersRegex stringByReplacingMatchesInString:encodedLyrics
+                                                                                        options:0
+                                                                                          range:NSMakeRange(0, [encodedLyrics length])
+                                                                                     usingBlock:
+                    ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+                    {
+                        // This part referenced http://stackoverflow.com/questions/2832729/how-to-convert-ascii-value-to-a-character-in-objective-c
+                        NSRange matchRange = [result rangeAtIndex:1];
+                        NSInteger matchCharInt = [[encodedLyrics substringWithRange:matchRange] intValue];
+                        return (NSString *)[NSString stringWithFormat:@"%c", matchCharInt];
+                    }];
+
+                // Clear HTML tags (and convert <br />'s to line breaks)
+                NSRegularExpression *tidyRegex = [NSRegularExpression regularExpressionWithPattern:@"</?(\\w+)\\s*/?>"
+                                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                                             error:nil];
+                NSString *lyrics = [tidyRegex stringByReplacingMatchesInString:untidiedLyrics
+                                                                       options:0 
+                                                                         range:NSMakeRange(0, [untidiedLyrics length])
+                                                                    usingBlock:
+                    ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+                    {
+                        NSRange matchRange = [result rangeAtIndex:1];
+                        NSString *tagName = [untidiedLyrics substringWithRange:matchRange];
+                        if ([tagName isEqualToString:@"br"])
+                        {
+                            return @"\n";
+                        }
+                        else
+                        {
+                            return @"";
+                        }
+                    }];
+
+                // LyricsWiki aren't licensed to display every song in the world
+                // but they still list a short excerpt, with a disclaimer
+                if ([lyrics rangeOfString:@"Unfortunately, we are not licensed to display the full lyrics for this song at the moment"].location == NSNotFound)
+                {
+                    self.lyrics = lyrics;
+                }
+            }
+        }
     }
     @catch (id e)
     {
@@ -191,8 +243,6 @@
         [_pool release];
         _pool = nil;
     }
-
-    DebugLog(@"Ending operation: %@ by %@", self.title, self.artist);
 }
 
 /*
