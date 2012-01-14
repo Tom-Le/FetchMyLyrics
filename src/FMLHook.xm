@@ -44,7 +44,7 @@
     [[FMLController sharedController] reloadDisplayableTextView];
 }
 
-%end
+%end // %hook MediaApplication
 
 %hook MPQueueFeeder
 
@@ -62,7 +62,7 @@
     return item;
 }
 
-%end
+%end // %hook MPQueueFeeder
 
 %hook IUMediaQueryNowPlayingItem
 
@@ -89,7 +89,7 @@
     return lyrics;
 }
 
-%end
+%end // %hook IUMediaQueryNowPlayingItem
 
 %hook MPPortraitInfoOverlay
 
@@ -114,9 +114,9 @@
     %orig;
 }
 
-%end
+%end // %hook MPPortraitInfoOverlay
 
-%end
+%end // %group iOS5
 
 /*
  * Initialization.
