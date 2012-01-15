@@ -116,6 +116,60 @@
 
 %end // %hook MPPortraitInfoOverlay
 
+/*
+ * This part to the initialization contains test code, not indended for production.
+ */
+/*%hook IUNowPlayingAlbumFrontViewController
+
+- (void)swipableView:(id)arg1 tappedWithCount:(NSUInteger)arg2
+{
+    // FREE TAP GESTURE RECOGNITION!
+    // Plan: Hook here to activate edit mode
+    DebugLog(@"About me: %@", self);
+    DebugLog(@"Args: %@   %i", arg1, arg2);
+    %orig;
+
+    // Note: MPPortraitTransportControls: play/pause/next/back/volume bar
+    //       IUNowPlayingPortraitInfoOverlay: lyrics + scrubber
+    //       MPTextView: lyrics
+}
+
+%end
+
+%hook MPPortraitControlsOverlay
+
+- (id)initWithFrame:(CGRect)frame
+{
+    id view = %orig;
+
+	CGFloat red =  (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat blue = (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat green = (CGFloat)random()/(CGFloat)RAND_MAX;    
+    [view layer].borderColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f].CGColor;
+    [view layer].borderWidth = 3.0f;
+
+    return view;
+}
+
+%end
+
+%hook MPPortraitTransportControls
+
+- (id)initWithFrame:(CGRect)frame
+{
+    id view = %orig;
+
+	CGFloat red =  (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat blue = (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat green = (CGFloat)random()/(CGFloat)RAND_MAX;    
+    [view layer].borderColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f].CGColor;
+    [view layer].borderWidth = 3.0f;
+
+    return view;
+}
+
+%end*/
+
 %end // %group iOS5
 
 /*
