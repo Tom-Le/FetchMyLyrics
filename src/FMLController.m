@@ -38,7 +38,7 @@
     //       - Tasks in the global dispatch queue (default priority) handle arriving IUMediaQueryNowPlayingItem's.
     //       - Tasks in _lyricsFetchOperationQueue handle fetching the lyrics from the sky/Internet.
 
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
     if (_ready && enabled)
     {
         dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -124,7 +124,7 @@
  */
 - (NSString *)lyricsForSongWithTitle:(NSString *)title artist:(NSString *)artist
 {
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
+    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
     if (_ready && enabled)
     {
         @synchronized(_lyricsWrappers)
@@ -171,7 +171,7 @@
 
         // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
         // and only if the tweak is enabled
-        BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnable"];
+        BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
         if (enabled)
         {
             id item = objc_msgSend(_currentInfoOverlay, @selector(item));
@@ -193,7 +193,7 @@
 {
     dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(global_queue, ^{
-        NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnable",
+        NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnabled",
                                                                             @"FMLLyricsWikiOperation", @"FMLOperation", nil];
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 

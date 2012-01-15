@@ -21,7 +21,7 @@
             <key>defaults</key>
             <string>com.apple.mobileipod</string>
             <key>key</key>
-            <string>FMLEnable</string>
+            <string>FMLEnabled</string>
             <key>label</key>
             <string>FetchMyLyrics</string>
         </dict>
