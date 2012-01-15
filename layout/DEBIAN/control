@@ -5,6 +5,8 @@ Depends: mobilesubstrate, preferenceloader, firmware (>= 5.0)
 Priority: optional
 Architecture: iphoneos-arm
 Description: Automatically download lyrics from the Internet for Music.app/iPod.app.
+ FetchMyLyrics hooks into Music.app or iPod.app to download lyrics from the Internet
+ and display them in the now playing view.
 Homepage: http://precocity.nerdycat.com/fetchmylyrics
 Maintainer: Tom Cat <tomthecat94+fetchmylyrics@gmail.com>
 Author: Tom Cat <tomthecat94+fetchmylyrics@gmail.com>
