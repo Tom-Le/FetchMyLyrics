@@ -26,7 +26,7 @@ FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLLyricsWikiOperation.m \
 					  src/FMLAZLyricsOperation.m \
 					  src/NSRegularExpression+Extra.m
-FetchMyLyrics_FRAMEWORKS = Foundation UIKit MediaPlayer CoreGraphics
+FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit CoreGraphics QuartzCore
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 FetchMyLyrics_CFLAGS = -I./src -I./headers -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
