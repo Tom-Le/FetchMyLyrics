@@ -19,8 +19,6 @@
 #import "FMLLyricsWikiOperation.h"
 #import "FMLAZLyricsOperation.h"
 
-#define FMLLYRICSSTORAGEFOLDER @"~/Library/FetchMyLyrics/"
-
 @implementation FMLController
 
 #pragma mark Now Playing
