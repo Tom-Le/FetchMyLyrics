@@ -4,13 +4,6 @@ all clean package install::
 	@$(MAKE) $(MAKEFLAGS) MAKELEVEL=0 $@
 else
 
-ifeq ($(shell [ -f ./theos/bin/ldid ] && echo 1 || echo 0),0)
-all package install::
-	@echo "ERROR: ldid not present in ./theos/bin/"
-	@echo "Find a copy of ldid (on the Internet), then put it in ./theos/bin/"
-	@exit 1
-else
-
 # Absolute path to theos
 THEOS = $(shell cd ./theos/; pwd;)
 # SSH info
@@ -53,7 +46,5 @@ include ./theos/makefiles/tweak.mk
 package::
 	@echo "Cleaning working directory..."
 	@rm -rf $(THEOS_STAGING_DIR)
-
-endif
 
 endif
