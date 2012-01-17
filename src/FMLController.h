@@ -9,6 +9,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const kFMLLyricsStorageFolder;
+extern NSString * const kFMLLyricsOperationsFolder;
+
 @class FMLLyricsWrapper, FMLOperation;
 
 @interface FMLController : NSObject {

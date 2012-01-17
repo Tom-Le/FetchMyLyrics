@@ -19,6 +19,9 @@
 #import "FMLLyricsWikiOperation.h"
 #import "FMLAZLyricsOperation.h"
 
+NSString * const kFMLLyricsStorageFolder = @"~/Library/FetchMyLyrics/";
+NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";
+
 @implementation FMLController
 
 #pragma mark Now Playing
@@ -77,10 +80,17 @@
 
             // Start a new task to fetch the lyrics
             NSString *operationKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"FMLOperation"];
-            FMLOperation *operation = [[[NSClassFromString(operationKey) alloc] init] autorelease];
+            NSString *operationBundlePath = [kFMLLyricsOperationsFolder stringByAppendingString:[operationKey stringByAppendingString:@".bundle"]];
+            NSBundle *operationBundle = [NSBundle bundleWithPath:operationBundlePath];
+            Class operationClass = [operationBundle principalClass];
 
-            if (operation)
+            DebugLog(@"Operation bundle path: %@", operationBundlePath);
+            DebugLog(@"Operation bundle: %@", operationBundle);
+            DebugLog(@"Operation class: %@", operationClass);
+
+            if (operationClass)
             {
+                FMLOperation *operation = (FMLOperation *)[[[operationClass alloc] init] autorelease];
                 operation.title = title;
                 operation.artist = artist;
                 [_lyricsFetchOperationQueue addOperation:operation];
@@ -221,7 +231,7 @@
     NSMutableArray *storedWrappers;
     @try
     {
-        NSString *path = [[FMLLYRICSSTORAGEFOLDER stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
+        NSString *path = [[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
         storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     }
     @catch (id e)
@@ -241,14 +251,14 @@
 - (void)writeToLyricsStorageFile
 {
     NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[FMLLYRICSSTORAGEFOLDER stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[FMLLYRICSSTORAGEFOLDER stringByExpandingTildeInPath]
+    if (![manager fileExistsAtPath:[kFMLLyricsStorageFolder stringByExpandingTildeInPath]])
+        [manager createDirectoryAtPath:[kFMLLyricsStorageFolder stringByExpandingTildeInPath]
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
 
     [NSKeyedArchiver archiveRootObject:_lyricsWrappers
-                                toFile:[[FMLLYRICSSTORAGEFOLDER stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
+                                toFile:[[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
 }
 
 #pragma mark Singleton

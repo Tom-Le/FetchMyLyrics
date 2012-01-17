@@ -17,19 +17,29 @@ THEOS = $(shell cd ./theos/; pwd;)
 THEOS_DEVICE_PORT = 2222
 THEOS_DEVICE_IP   = localhost
 
-# Tweak meta
 TWEAK_NAME = FetchMyLyrics
 FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLController.m \
 					  src/FMLOperation.m \
-					  src/FMLLyricsWikiOperation.m \
-					  src/FMLAZLyricsOperation.m \
 					  src/FMLLyricsWrapper.m \
 					  src/NSRegularExpression+Extra.m
 FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit CoreGraphics QuartzCore
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 FetchMyLyrics_CFLAGS = -I./src -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
+
+BUNDLE_NAME = FMLLyricsWikiOperation FMLAZLyricsOperation
+FMLLyricsWikiOperation_FILES = src/FMLLyricsWikiOperation.m \
+							   src/FMLOperation.m
+FMLLyricsWikiOperation_FRAMEWORKS = Foundation
+FMLLyricsWikiOperation_CFLAGS = -I./src
+FMLLyricsWikiOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
+FMLAZLYricsOperation_FILES = src/FMLAZLyricsOperation.m \
+							 src/FMLOperation.m
+FMLAZLyricsOperation_FRAMEWORKS = Foundation
+FMLAZLyricsOperation_CFLAGS = -I./src
+FMLAZLyricsOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
+
 TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 
 # Uncomment the following lines (and modify as appropriate) if you are
@@ -37,6 +47,7 @@ TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 # FetchMyLyrics_LDFLAGS = -F/path/to/Frameworks -F/path/to/PrivateFrameworks
 
 include ./theos/makefiles/common.mk
+include ./theos/makefiles/bundle.mk
 include ./theos/makefiles/tweak.mk
 
 package::

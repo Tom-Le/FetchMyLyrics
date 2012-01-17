@@ -1,27 +1,5 @@
 #!/bin/bash -e
 
-# This build script is meant to be used in conjunction with tcprelay.py,
-# and with the assumption that you have your public key stored in your 
-# iDevice (otherwise it would ask for your password every time and that would
-# be a pain in the ass.
-
-# I chose not to go with `make package; make install` because I don't want to mess
-# with Cydia and APT before distribution. (Also because there is no pre/post install
-# scripts to run)
-
-# Also, configure your .ssh/config
-# Example: (in .ssh/config)
-# Hosts ipod
-#      User     root
-#      Port     2222           or whatever you used while running tcprelay.py
-#      HostName localhost
-
-make
-
-echo "Transferring files..."
-scp -q obj/FetchMyLyrics.dylib ipod://Library/MobileSubstrate/DynamicLibraries/
-scp -q FetchMyLyrics.plist ipod://Library/MobileSubstrate/DynamicLibraries/
-scp -q layout/Library/PreferenceLoader/Preferences/FetchMyLyrics.plist ipod://Library/PreferenceLoader/Preferences/ 
-
-echo "Respringing..."
-ssh ipod killall SpringBoard
+make package
+make install
+rm *.deb
