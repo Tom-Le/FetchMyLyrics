@@ -84,10 +84,6 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             NSBundle *operationBundle = [NSBundle bundleWithPath:operationBundlePath];
             Class operationClass = [operationBundle principalClass];
 
-            DebugLog(@"Operation bundle path: %@", operationBundlePath);
-            DebugLog(@"Operation bundle: %@", operationBundle);
-            DebugLog(@"Operation class: %@", operationClass);
-
             if (operationClass)
             {
                 FMLOperation *operation = (FMLOperation *)[[[operationClass alloc] init] autorelease];
