@@ -279,7 +279,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
     if ((self = [super init]))
     {
         _lyricsFetchOperationQueue = [[NSOperationQueue alloc] init];
-        [_lyricsFetchOperationQueue setName:@"com.uglycathasnodomain.FetchMyLyrics.LyricsFetchOperations"];
+        [_lyricsFetchOperationQueue setName:@"no.domain.FetchMyLyrics.LyricsFetchOperations"];
 
         _lyricsWrappers = [[NSMutableArray alloc] init];
         _ready = NO;
