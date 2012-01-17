@@ -22,13 +22,13 @@ TWEAK_NAME = FetchMyLyrics
 FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLController.m \
 					  src/FMLOperation.m \
-					  src/FMLLyricsWrapper.m \
 					  src/FMLLyricsWikiOperation.m \
 					  src/FMLAZLyricsOperation.m \
+					  src/FMLLyricsWrapper.m \
 					  src/NSRegularExpression+Extra.m
 FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit CoreGraphics QuartzCore
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
-FetchMyLyrics_CFLAGS = -I./src -I./headers -I/usr/include/objc
+FetchMyLyrics_CFLAGS = -I./src -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
 
