@@ -9,6 +9,7 @@
 
 #import "FMLOperation.h"
 
+#import "FMLController.h"
 #import "FMLCommon.h"
 
 @implementation FMLOperation
@@ -49,6 +50,20 @@
     [self willChangeValueForKey:@"isFinished"];
     _abs_finished = YES;
     [self didChangeValueForKey:@"isFinished"];
+
+    [self completeOperation];
+}
+
+/*
+ * Function: Wrap up operation.
+ *           Reports to FMLController's shared instance if lyrics exists.
+ */
+- (void)completeOperation
+{
+    if (self.lyrics)
+    {
+        [[FMLController sharedController] operationReportsAvailableLyrics:self];
+    }
 }
 
 /*

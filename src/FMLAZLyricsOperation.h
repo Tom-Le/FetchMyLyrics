@@ -11,8 +11,6 @@
 
 #import "FMLOperation.h"
 
-@class FMLController, FMLLyricsWrapper;
-
 @interface FMLAZLyricsOperation : FMLOperation {
     NSAutoreleasePool *_pool;
 

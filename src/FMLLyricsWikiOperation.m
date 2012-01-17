@@ -9,9 +9,6 @@
 
 #import "FMLLyricsWikiOperation.h"
 
-#import "FMLLyricsWrapper.h"
-#import "FMLController.h"
-
 #import "NSRegularExpression+Extra.h"
 #import "FMLCommon.h"
 
@@ -223,10 +220,6 @@
  */
 - (void)completeOperation
 {
-    // Notify FMLController singleton
-    if (self.lyrics)
-        [[FMLController sharedController] operationReportsAvailableLyrics:self];
-
     // Mark task as finished
     [self willChangeValueForKey:@"isFinished"];
     [self willChangeValueForKey:@"isExecuting"];
@@ -243,6 +236,8 @@
         [_pool release];
         _pool = nil;
     }
+
+    [super completeOperation];
 }
 
 /*

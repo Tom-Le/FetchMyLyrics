@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class FMLLyricsWrapper, FMLOperation, FMLLyricsWikiOperation, FMLAZLyricsOperation, FMLAZLyricsOperation;
+@class FMLLyricsWrapper, FMLOperation;
 
 @interface FMLController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;

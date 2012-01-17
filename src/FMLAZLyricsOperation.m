@@ -9,8 +9,6 @@
 
 #import "FMLAZLyricsOperation.h"
 
-#import "FMLLyricsWrapper.h"
-#import "FMLController.h"
 #import "FMLCommon.h"
 
 @implementation FMLAZLyricsOperation
@@ -160,10 +158,6 @@
  */
 - (void)completeOperation
 {
-    // Notify FMLController singleton
-    if (self.lyrics)
-        [[FMLController sharedController] operationReportsAvailableLyrics:self];
-
     // Mark task as finished
     [self willChangeValueForKey:@"isFinished"];
     [self willChangeValueForKey:@"isExecuting"];
@@ -180,6 +174,8 @@
         [_pool release];
         _pool = nil;
     }
+
+    [super completeOperation];
 }
 
 /*
