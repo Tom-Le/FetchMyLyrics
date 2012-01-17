@@ -9,7 +9,6 @@
 
 #import "FMLOperation.h"
 
-#import "FMLController.h"
 #import "FMLCommon.h"
 
 @implementation FMLOperation
@@ -62,7 +61,12 @@
 {
     if (self.lyrics)
     {
-        [[FMLController sharedController] operationReportsAvailableLyrics:self];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.title,  @"title",
+                                                                            self.artist, @"artist",
+                                                                            self.lyrics, @"lyrics", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FMLOperationDidReturnWithLyrics"
+                                                            object:nil
+                                                          userInfo:userInfo];
     }
 }
 

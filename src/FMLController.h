@@ -23,7 +23,7 @@
 - (void)handleSongWithNowPlayingItem:(id)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
                               artist:(NSString *)artist;
-- (void)operationReportsAvailableLyrics:(FMLOperation *)operation;
+- (void)operationDidReturnWithLyrics:(NSNotification *)notification;
 
 - (void)readFromLyricsStorageFile;
 - (void)writeToLyricsStorageFile;

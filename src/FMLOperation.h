@@ -9,8 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class FMLController;
-
 @interface FMLOperation : NSOperation {
     NSString *_title;
     NSString *_artist;

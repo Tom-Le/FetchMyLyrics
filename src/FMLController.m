@@ -144,30 +144,35 @@
 /*
  * Function: Update our storage with new lyrics.
  */
-- (void)operationReportsAvailableLyrics:(FMLOperation *)operation
+- (void)operationDidReturnWithLyrics:(NSNotification *)notification
 {
-    if (_ready)
+    if (_ready && [[notification name] isEqualToString:@"FMLOperationDidReturnWithLyrics"])
     {
-        // Prevent duplicates
-        BOOL duplicate = NO;
-        for (FMLLyricsWrapper *lw in _lyricsWrappers)
-            if ([lw.title isEqualToString:operation.title] && [lw.artist isEqualToString:operation.artist]) 
-                duplicate = YES;
+        NSString *title = [[notification userInfo] objectForKey:@"title"];
+        NSString *artist = [[notification userInfo] objectForKey:@"artist"];
+        NSString *lyrics = [[notification userInfo] objectForKey:@"lyrics"];
 
-        if (!duplicate)
-        {
-            // No duplicate found, add.
-            FMLLyricsWrapper *wrapper = [FMLLyricsWrapper lyricsWrapper];
-            wrapper.title = operation.title;
-            wrapper.artist = operation.artist;
-            wrapper.lyrics = operation.lyrics;
-            @synchronized(_lyricsWrappers)
+        BOOL duplicate = NO;
+        NSUInteger duplicateIndex;
+        for (FMLLyricsWrapper *lw in _lyricsWrappers)
+            if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
             {
-                [_lyricsWrappers addObject:wrapper];
+                duplicateIndex = [_lyricsWrappers indexOfObject:lw];
+                duplicate = YES;
+                break;
             }
 
-            [self writeToLyricsStorageFile];
-        }
+        FMLLyricsWrapper *wrapper = [FMLLyricsWrapper lyricsWrapper];
+        wrapper.title = title;
+        wrapper.artist = artist;
+        wrapper.lyrics = lyrics;
+
+        if (!duplicate)
+            [_lyricsWrappers addObject:wrapper];
+        else
+            [_lyricsWrappers replaceObjectAtIndex:duplicateIndex withObject:wrapper];
+
+        [self writeToLyricsStorageFile];
 
         // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
         // and only if the tweak is enabled
@@ -177,7 +182,7 @@
             id item = objc_msgSend(_currentInfoOverlay, @selector(item));
             NSString *nowPlayingTitle = (NSString *)objc_msgSend(item, @selector(mainTitle)); 
             NSString *nowPlayingArtist = (NSString *)objc_msgSend(item, @selector(artist));
-            if ([nowPlayingTitle isEqualToString:operation.title] && [nowPlayingArtist isEqualToString:operation.artist])
+            if ([nowPlayingTitle isEqualToString:title] && [nowPlayingArtist isEqualToString:artist])
                 [self reloadDisplayableTextView];
         }
     }
@@ -198,6 +203,11 @@
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
         [self readFromLyricsStorageFile];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(operationDidReturnWithLyrics:)
+                                                     name:@"FMLOperationDidReturnWithLyrics"
+                                                   object:nil];
 
         _ready = YES;
     });
@@ -308,6 +318,8 @@
     [_lyricsFetchOperationQueue release];
     [_lyricsWrappers release];
     [self ridCurrentInfoOverlay];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super dealloc];
 }
