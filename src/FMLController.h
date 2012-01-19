@@ -7,7 +7,7 @@
  *     https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 extern NSString * const kFMLLyricsStorageFolder;
 extern NSString * const kFMLLyricsOperationsFolder;
@@ -31,8 +31,6 @@ extern NSString * const kFMLLyricsOperationsFolder;
 - (void)readFromLyricsStorageFile;
 - (void)writeToLyricsStorageFile;
 
-- (void)setCurrentInfoOverlay:(id)overlay;
-- (void)ridCurrentInfoOverlay;
 - (void)reloadDisplayableTextView;
 
 + (id)sharedController;

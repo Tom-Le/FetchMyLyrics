@@ -13,6 +13,7 @@
 
 #import "FMLController.h"
 #import "FMLCommon.h"
+#import "NSObject+InstanceVariable.h"
 
 #import "FMLLyricsWrapper.h"
 #import "FMLOperation.h"
@@ -83,7 +84,6 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             NSString *operationBundlePath = [kFMLLyricsOperationsFolder stringByAppendingString:[operationKey stringByAppendingString:@".bundle"]];
             NSBundle *operationBundle = [NSBundle bundleWithPath:operationBundlePath];
             Class operationClass = [operationBundle principalClass];
-
             if (operationClass)
             {
                 FMLOperation *operation = (FMLOperation *)[[[operationClass alloc] init] autorelease];
@@ -96,31 +96,33 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 }
 
 /*
- * Functions: Update reference to _currentInfoOverlay
- * Note     : This MPPortraitInfoOverlay instance provides a bridge between our tweak and
- *            the now playing UI. In particular, we need a reference to this instance to
- *            update the UI whenever we fetch new lyrics for a song currently played.
+ * Function: Reload displayable text (ie. lyrics) view if it's present.
+ * Note    : Basicaly dig into the view hierachy to reach the instance of MPPortraitInfoOverlay
+ *           which has a method that will reload the displayable text (ie. lyrics) view
+ *           (This is at least more elegant than the last one I used, which is to hook into
+ *           MPPortraitInfoOverlay and retain instances to it--who knows how many objects I was leaking)
  */
-- (void)setCurrentInfoOverlay:(id)overlay
-{
-    [self ridCurrentInfoOverlay];
-    _currentInfoOverlay = [overlay retain];
-}
-
-- (void)ridCurrentInfoOverlay
-{
-    [_currentInfoOverlay release];
-    _currentInfoOverlay = nil;
-}
-
 - (void)reloadDisplayableTextView
 {
-    if (_currentInfoOverlay)
+    id/*MediaApplication*/ appDelegate = [[UIApplication sharedApplication] delegate];
+    UINavigationController/*IUiPodNavigationController*/ *navController = objc_msgSend(appDelegate, @selector(IUTopNavigationController));
+    id visibleViewController = [navController visibleViewController];
+
+    // visibleViewController is actually an instance of IUMixedPlaybackViewController from my initial testing
+    // but IUMixedPlaybackViewController is a subclass of IUPlaybackViewController anyway
+    if ([visibleViewController isKindOfClass:NSClassFromString(@"IUPlaybackViewController")])
     {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            id item = objc_msgSend(_currentInfoOverlay, @selector(item));
-            objc_msgSend(_currentInfoOverlay, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
-        }];
+        id/*IUNowPlayingPortraitViewController*/ activeViewController = [visibleViewController objectInstanceVariable:@"_activeViewController"];
+        id/*IUNowPlayingAlbumFrontViewController*/ mainController = [activeViewController objectInstanceVariable:@"_mainController"];
+        id/*IUNowPlayingPortraitInfoOverlay*/ overlayView = [mainController objectInstanceVariable:@"_overlayView"];
+        if (overlayView)
+        {
+            id item = [overlayView objectInstanceVariable:@"_item"];
+            if (item)
+            {
+                objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
+            }
+        }
     }
 }
 
@@ -194,31 +196,6 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
     }
 }
 
-#pragma mark Setup
-/*
- * Function: Setup the singleton.
- *           Load the saved lyrics, if there's any. 
- * Note    : Return ASAP or it will take forever to start up.
- */
-- (void)setup
-{
-    dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(global_queue, ^{
-        NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnabled",
-                                                                            @"FMLLyricsWikiOperation", @"FMLOperation", nil];
-        [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-
-        [self readFromLyricsStorageFile];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(operationDidReturnWithLyrics:)
-                                                     name:@"FMLOperationDidReturnWithLyrics"
-                                                   object:nil];
-
-        _ready = YES;
-    });
-}
-
 /*
  * Functions: Read/write from/to lyrics storage file.
  */
@@ -255,6 +232,31 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 
     [NSKeyedArchiver archiveRootObject:_lyricsWrappers
                                 toFile:[[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
+}
+
+#pragma mark Setup
+/*
+ * Function: Setup the singleton.
+ *           Load the saved lyrics, if there's any. 
+ * Note    : Return ASAP or it will take forever to start up.
+ */
+- (void)setup
+{
+    dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(global_queue, ^{
+        NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnabled",
+                                                                            @"FMLLyricsWikiOperation", @"FMLOperation", nil];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+
+        [self readFromLyricsStorageFile];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(operationDidReturnWithLyrics:)
+                                                     name:@"FMLOperationDidReturnWithLyrics"
+                                                   object:nil];
+
+        _ready = YES;
+    });
 }
 
 #pragma mark Singleton
@@ -323,7 +325,6 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 {
     [_lyricsFetchOperationQueue release];
     [_lyricsWrappers release];
-    [self ridCurrentInfoOverlay];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     

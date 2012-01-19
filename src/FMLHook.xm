@@ -12,6 +12,7 @@
 
 #import "FMLController.h"
 #import "FMLCommon.h"
+#import "NSObject+InstanceVariable.h"
 
 %group iOS5
 
@@ -91,35 +92,38 @@
 
 %end // %hook IUMediaQueryNowPlayingItem
 
-%hook MPPortraitInfoOverlay
+%end // %group iOS5
+
+
 
 /*
- * Hooks: - [MPPortraitInfoOverlay initWithFrame:]
- *        - [MPPortraitInfoOverlay dealloc]
- * Goal : Retain a reference to the portrait view, so that we can refresh the
- *        lyrics text view when our operations return with new lyrics.
+ * This group contains test code, not indended for production.
  */
-- (id)initWithFrame:(CGRect)frame
-{
-    id view = %orig;
-    if (view)
-        [[FMLController sharedController] setCurrentInfoOverlay:self];
+/*
+%group Testing
 
-    return view;
-}
+%hook IUNowPlayingPortraitViewController
 
-- (void)dealloc
+- (void)viewDidAppear:(BOOL)arg1
 {
-    [[FMLController sharedController] ridCurrentInfoOverlay];
     %orig;
+
+    id __mainController = [self objectInstanceVariable:@"_mainController"];
+    id view = objc_msgSend(__mainController, @selector(view));
+
+	CGFloat red =  (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat blue = (CGFloat)random()/(CGFloat)RAND_MAX;
+	CGFloat green = (CGFloat)random()/(CGFloat)RAND_MAX;    
+    [(UIView *)view layer].borderColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f].CGColor;
+    [(UIView *)view layer].borderWidth = 3.0f;
+
+    DebugLog(@"Main controller: %@", __mainController);
+    DebugLog(@"View: %@", view);
 }
 
-%end // %hook MPPortraitInfoOverlay
+%end
 
-/*
- * This part to the initialization contains test code, not indended for production.
- */
-/*%hook IUNowPlayingAlbumFrontViewController
+%hook IUNowPlayingAlbumFrontViewController
 
 - (void)swipableView:(id)arg1 tappedWithCount:(NSUInteger)arg2
 {
@@ -128,6 +132,8 @@
     DebugLog(@"About me: %@", self);
     DebugLog(@"Args: %@   %i", arg1, arg2);
     %orig;
+
+    DebugLog(@"Parent view controller: %@", objc_msgSend(self, @selector(parentViewController)));
 
     // Note: MPPortraitTransportControls: play/pause/next/back/volume bar
     //       IUNowPlayingPortraitInfoOverlay: lyrics + scrubber
@@ -168,9 +174,9 @@
     return view;
 }
 
-%end*/
+%end
 
-%end // %group iOS5
+%end*/ // %group Testing
 
 /*
  * Initialization.
@@ -180,6 +186,7 @@
     NSString *iOSVersion = [[UIDevice currentDevice] systemVersion];
     if ([iOSVersion compare:@"5.0" options:NSNumericSearch] != NSOrderedAscending)
         %init(iOS5);
+        //%init(Testing);
 }
 
 // Hey, if you're a college admission officer reading this source code
