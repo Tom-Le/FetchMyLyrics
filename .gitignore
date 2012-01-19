@@ -5,4 +5,4 @@ _
 *.deb
 headers/
 *Frameworks/
-*.un
+*.un~
