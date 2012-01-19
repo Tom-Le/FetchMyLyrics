@@ -15,7 +15,8 @@ FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLController.m \
 					  src/FMLOperation.m \
 					  src/FMLLyricsWrapper.m \
-					  src/NSRegularExpression+Extra.m
+					  src/NSRegularExpression+Extra.m \
+					  src/NSObject+InstanceVariable.m
 FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit CoreGraphics QuartzCore
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
 FetchMyLyrics_CFLAGS = -I./src -I/usr/include/objc
@@ -27,7 +28,7 @@ FMLLyricsWikiOperation_FILES = src/FMLLyricsWikiOperation.m \
 FMLLyricsWikiOperation_FRAMEWORKS = Foundation
 FMLLyricsWikiOperation_CFLAGS = -I./src
 FMLLyricsWikiOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
-FMLAZLYricsOperation_FILES = src/FMLAZLyricsOperation.m \
+FMLAZLyricsOperation_FILES = src/FMLAZLyricsOperation.m \
 							 src/FMLOperation.m
 FMLAZLyricsOperation_FRAMEWORKS = Foundation
 FMLAZLyricsOperation_CFLAGS = -I./src
