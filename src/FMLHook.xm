@@ -81,7 +81,11 @@
     NSString *lyrics = (NSString *)%orig;
     if (lyrics == nil)
     {
+        // Only replace lyrics with our own if there's no lyrics in user's library
+        // TODO: Preference to pick between iTunes library lyrics and only ours
+        if (![self respondsToSelector:@selector(mediaItem)]) return nil;
         id mediaItem = objc_msgSend(self, @selector(mediaItem));
+        if (![mediaItem respondsToSelector:@selector(valueForProperty:)]) return nil;
         NSString *title = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
         NSString *artist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
         return [[FMLController sharedController] lyricsForSongWithTitle:title artist:artist];

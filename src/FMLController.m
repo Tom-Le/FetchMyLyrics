@@ -111,11 +111,8 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 - (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist
 {
     id/*MediaApplication*/ appDelegate = [[UIApplication sharedApplication] delegate];
-    if (![appDelegate respondsToSelector:@selector(IUTopNavigationController)])
-    {
-        DebugLog(@"Looks like MediaApplication's implementation has changed. Instances of this class no longer respond to -IUTopNavigationController.");
-        return;
-    }
+    if (![appDelegate respondsToSelector:@selector(IUTopNavigationController)]) return;
+
     UINavigationController/*IUiPodNavigationController*/ *navController = objc_msgSend(appDelegate, @selector(IUTopNavigationController));
     id visibleViewController = [navController visibleViewController];
 
@@ -128,11 +125,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
     id/*IUNowPlayingPortraitInfoOverlay*/ overlayView = [mainController objectInstanceVariable:@"_overlayView"];
     if (overlayView == nil) return;
 
-    if (![overlayView respondsToSelector:@selector(_updateDisplayableTextViewForItem:animate:)])
-    {
-        DebugLog(@"Looks like IUNowPlayingPortraitInfoOverlay's implementation has changed. Instances of this class no longer respond to -_updateDisplayableTextViewForItem:animate:.");
-        return;
-    }
+    if (![overlayView respondsToSelector:@selector(_updateDisplayableTextViewForItem:animate:)]) return;
     id/*IUMediaQueryNowPlayingItem*/ item = [overlayView objectInstanceVariable:@"_item"];
     objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
 }
