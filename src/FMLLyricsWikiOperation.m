@@ -14,6 +14,10 @@
 
 @implementation FMLLyricsWikiOperation
 
+@synthesize title = _title;
+@synthesize artist = _artist;
+@synthesize lyrics = _lyrics;
+
 #pragma mark Initialization
 /*
  * Function: Initialization.
@@ -237,7 +241,16 @@
         _pool = nil;
     }
 
-    [super completeOperation];
+    // Publish lyrics to notification center (no, not the one with weather + stocks)
+    if (self.lyrics)
+    {
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.title,  @"title",
+                                                                            self.artist, @"artist",
+                                                                            self.lyrics, @"lyrics", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FMLOperationDidReturnWithLyrics"
+                                                            object:nil
+                                                          userInfo:userInfo];
+    }
 }
 
 /*

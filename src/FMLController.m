@@ -74,7 +74,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             // If a task is already running for the song requested, return.
             @synchronized(_lyricsFetchOperationQueue)
             {
-                for (FMLOperation *lo in [_lyricsFetchOperationQueue operations])
+                for (NSOperation<FMLOperation> *lo in [_lyricsFetchOperationQueue operations])
                     if ([lo.title isEqualToString:title] && [lo.artist isEqualToString:artist])
                         return;
             }
@@ -86,7 +86,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             Class operationClass = [operationBundle principalClass];
             if (operationClass)
             {
-                FMLOperation *operation = (FMLOperation *)[[[operationClass alloc] init] autorelease];
+                NSOperation<FMLOperation> *operation = (NSOperation<FMLOperation> *)[[[operationClass alloc] init] autorelease];
                 operation.title = title;
                 operation.artist = artist;
                 [_lyricsFetchOperationQueue addOperation:operation];

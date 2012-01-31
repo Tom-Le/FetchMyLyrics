@@ -11,13 +11,15 @@
 
 #import "FMLOperation.h"
 
-@interface FMLLyricsWikiOperation : FMLOperation { 
+@interface FMLLyricsWikiOperation : NSOperation <FMLOperation> { 
     NSAutoreleasePool *_pool;
+
+    NSString *_title;
+    NSString *_artist;
+    NSString *_lyrics;
 
     BOOL _executing;
     BOOL _finished;
 }
-
-- (void)completeOperation;
 
 @end

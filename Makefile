@@ -13,7 +13,6 @@ THEOS_DEVICE_IP   = localhost
 TWEAK_NAME = FetchMyLyrics
 FetchMyLyrics_FILES = src/FMLHook.xm \
 					  src/FMLController.m \
-					  src/FMLOperation.m \
 					  src/FMLLyricsWrapper.m \
 					  src/NSRegularExpression+Extra.m \
 					  src/NSObject+InstanceVariable.m
@@ -23,13 +22,11 @@ FetchMyLyrics_CFLAGS = -I./src -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 BUNDLE_NAME = FMLLyricsWikiOperation FMLAZLyricsOperation
-FMLLyricsWikiOperation_FILES = src/FMLLyricsWikiOperation.m \
-							   src/FMLOperation.m
+FMLLyricsWikiOperation_FILES = src/FMLLyricsWikiOperation.m
 FMLLyricsWikiOperation_FRAMEWORKS = Foundation
 FMLLyricsWikiOperation_CFLAGS = -I./src
 FMLLyricsWikiOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
-FMLAZLyricsOperation_FILES = src/FMLAZLyricsOperation.m \
-							 src/FMLOperation.m
+FMLAZLyricsOperation_FILES = src/FMLAZLyricsOperation.m
 FMLAZLyricsOperation_FRAMEWORKS = Foundation
 FMLAZLyricsOperation_CFLAGS = -I./src
 FMLAZLyricsOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/

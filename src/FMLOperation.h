@@ -9,21 +9,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FMLOperation : NSOperation {
-    NSString *_title;
-    NSString *_artist;
-    NSString *_lyrics;
-
-    BOOL _abs_finished;
-}
+@protocol FMLOperation
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *artist;
 @property (nonatomic, copy) NSString *lyrics;
 
-- (id)init;
 + (id)operation;
-
 - (void)completeOperation;
 
 @end
