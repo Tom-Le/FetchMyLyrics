@@ -18,8 +18,6 @@ extern NSString * const kFMLLyricsOperationsFolder;
     NSOperationQueue *_lyricsFetchOperationQueue;
     NSMutableArray *_lyricsWrappers;
 
-    id _currentInfoOverlay;
-
     BOOL _ready;
 }
 
@@ -31,7 +29,7 @@ extern NSString * const kFMLLyricsOperationsFolder;
 - (void)readFromLyricsStorageFile;
 - (void)writeToLyricsStorageFile;
 
-- (void)reloadDisplayableTextView;
+- (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist;
 
 + (id)sharedController;
 - (void)setup;

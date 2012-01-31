@@ -102,7 +102,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
  *           (This is at least more elegant than the last one I used, which is to hook into
  *           MPPortraitInfoOverlay and retain instances to it--who knows how many objects I was leaking)
  */
-- (void)reloadDisplayableTextView
+- (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist
 {
     id/*MediaApplication*/ appDelegate = [[UIApplication sharedApplication] delegate];
     UINavigationController/*IUiPodNavigationController*/ *navController = objc_msgSend(appDelegate, @selector(IUTopNavigationController));
@@ -117,10 +117,23 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         id/*IUNowPlayingPortraitInfoOverlay*/ overlayView = [mainController objectInstanceVariable:@"_overlayView"];
         if (overlayView)
         {
-            id item = [overlayView objectInstanceVariable:@"_item"];
+            id/*IUMediaQueryNowPlayingItem*/ item = [overlayView objectInstanceVariable:@"_item"];
             if (item)
             {
-                objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
+                if ((title == nil) || (artist == nil))
+                {
+                    objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
+                }
+                else
+                {
+                    id/*MPMediaItem*/ mediaItem = [item objectInstanceVariable:@"_mediaItem"];
+                    NSString *nowPlayingTitle = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
+                    NSString *nowPlayingArtist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
+                    if ((nowPlayingTitle != nil) && (nowPlayingArtist != nil) && [nowPlayingTitle isEqualToString:title] && [nowPlayingArtist isEqualToString:artist])
+                    {
+                        objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
+                    }
+                }
             }
         }
     }
@@ -160,6 +173,8 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         NSString *artist = [[notification userInfo] objectForKey:@"artist"];
         NSString *lyrics = [[notification userInfo] objectForKey:@"lyrics"];
 
+        DebugLog(@"Operation for %@ by %@ returned with lyrics.", title, artist);
+
         BOOL duplicate = NO;
         NSUInteger duplicateIndex;
         for (FMLLyricsWrapper *lw in _lyricsWrappers)
@@ -187,11 +202,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
         if (enabled)
         {
-            id item = objc_msgSend(_currentInfoOverlay, @selector(item));
-            NSString *nowPlayingTitle = (NSString *)objc_msgSend(item, @selector(mainTitle)); 
-            NSString *nowPlayingArtist = (NSString *)objc_msgSend(item, @selector(artist));
-            if ([nowPlayingTitle isEqualToString:title] && [nowPlayingArtist isEqualToString:artist])
-                [self reloadDisplayableTextView];
+            [self reloadDisplayableTextViewForSongTitle:title artist:artist];
         }
     }
 }

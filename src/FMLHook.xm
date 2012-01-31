@@ -42,7 +42,7 @@
 - (void)applicationDidBecomeActive:(id)arg1
 {
     %orig;
-    [[FMLController sharedController] reloadDisplayableTextView];
+    [[FMLController sharedController] reloadDisplayableTextViewForSongTitle:nil artist:nil];
 }
 
 %end // %hook MediaApplication
