@@ -50,12 +50,18 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             // NOTE: Block inherits every ivar as well as local vars
 
             // If the song already has lyrics, return.
-            BOOL hasDisplayableText = ((BOOL (*)(id, SEL, ...))objc_msgSend)(item, @selector(hasDisplayableText));
+            BOOL hasDisplayableText = NO; 
+            if ([item respondsToSelector:@selector(hasDisplayableText)])
+            {
+                hasDisplayableText = ((BOOL (*)(id, SEL, ...))objc_msgSend)(item, @selector(hasDisplayableText));
+            }
             if (hasDisplayableText)
                 return;
      
             // Song info
+            if (![item respondsToSelector:@selector(mediaItem)]) return;
             id mediaItem = objc_msgSend(item, @selector(mediaItem));
+            if (![mediaItem respondsToSelector:@selector(valueForProperty:)]) return;
             NSString *title = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
             NSString *artist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
 
@@ -105,38 +111,30 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 - (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist
 {
     id/*MediaApplication*/ appDelegate = [[UIApplication sharedApplication] delegate];
+    if (![appDelegate respondsToSelector:@selector(IUTopNavigationController)])
+    {
+        DebugLog(@"Looks like MediaApplication's implementation has changed. Instances of this class no longer respond to -IUTopNavigationController.");
+        return;
+    }
     UINavigationController/*IUiPodNavigationController*/ *navController = objc_msgSend(appDelegate, @selector(IUTopNavigationController));
     id visibleViewController = [navController visibleViewController];
 
     // visibleViewController is actually an instance of IUMixedPlaybackViewController from my initial testing
     // but IUMixedPlaybackViewController is a subclass of IUPlaybackViewController anyway
-    if ([visibleViewController isKindOfClass:NSClassFromString(@"IUPlaybackViewController")])
+    if (![visibleViewController isKindOfClass:NSClassFromString(@"IUPlaybackViewController")]) return;
+
+    id/*IUNowPlayingPortraitViewController*/ activeViewController = [visibleViewController objectInstanceVariable:@"_activeViewController"];
+    id/*IUNowPlayingAlbumFrontViewController*/ mainController = [activeViewController objectInstanceVariable:@"_mainController"];
+    id/*IUNowPlayingPortraitInfoOverlay*/ overlayView = [mainController objectInstanceVariable:@"_overlayView"];
+    if (overlayView == nil) return;
+
+    if (![overlayView respondsToSelector:@selector(_updateDisplayableTextViewForItem:animate:)])
     {
-        id/*IUNowPlayingPortraitViewController*/ activeViewController = [visibleViewController objectInstanceVariable:@"_activeViewController"];
-        id/*IUNowPlayingAlbumFrontViewController*/ mainController = [activeViewController objectInstanceVariable:@"_mainController"];
-        id/*IUNowPlayingPortraitInfoOverlay*/ overlayView = [mainController objectInstanceVariable:@"_overlayView"];
-        if (overlayView)
-        {
-            id/*IUMediaQueryNowPlayingItem*/ item = [overlayView objectInstanceVariable:@"_item"];
-            if (item)
-            {
-                if ((title == nil) || (artist == nil))
-                {
-                    objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
-                }
-                else
-                {
-                    id/*MPMediaItem*/ mediaItem = [item objectInstanceVariable:@"_mediaItem"];
-                    NSString *nowPlayingTitle = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
-                    NSString *nowPlayingArtist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
-                    if ((nowPlayingTitle != nil) && (nowPlayingArtist != nil) && [nowPlayingTitle isEqualToString:title] && [nowPlayingArtist isEqualToString:artist])
-                    {
-                        objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
-                    }
-                }
-            }
-        }
+        DebugLog(@"Looks like IUNowPlayingPortraitInfoOverlay's implementation has changed. Instances of this class no longer respond to -_updateDisplayableTextViewForItem:animate:.");
+        return;
     }
+    id/*IUMediaQueryNowPlayingItem*/ item = [overlayView objectInstanceVariable:@"_item"];
+    objc_msgSend(overlayView, @selector(_updateDisplayableTextViewForItem:animate:), item, YES);
 }
 
 #pragma mark Lyrics
@@ -173,8 +171,6 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         NSString *artist = [[notification userInfo] objectForKey:@"artist"];
         NSString *lyrics = [[notification userInfo] objectForKey:@"lyrics"];
 
-        DebugLog(@"Operation for %@ by %@ returned with lyrics.", title, artist);
-
         BOOL duplicate = NO;
         NSUInteger duplicateIndex;
         for (FMLLyricsWrapper *lw in _lyricsWrappers)
@@ -202,7 +198,9 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
         if (enabled)
         {
-            [self reloadDisplayableTextViewForSongTitle:title artist:artist];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self reloadDisplayableTextViewForSongTitle:title artist:artist];
+            }];
         }
     }
 }
