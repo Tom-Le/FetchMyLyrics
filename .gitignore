@@ -3,6 +3,5 @@
 obj/
 _
 *.deb
-headers/
 *Frameworks/
 *.un~
