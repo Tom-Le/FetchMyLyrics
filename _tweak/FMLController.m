@@ -17,8 +17,6 @@
 
 #import "FMLLyricsWrapper.h"
 #import "FMLOperation.h"
-#import "FMLLyricsWikiOperation.h"
-#import "FMLAZLyricsOperation.h"
 
 NSString * const kFMLLyricsStorageFolder = @"~/Library/FetchMyLyrics/";
 NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";

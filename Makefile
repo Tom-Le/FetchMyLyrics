@@ -11,24 +11,24 @@ THEOS_DEVICE_PORT = 2222
 THEOS_DEVICE_IP   = localhost
 
 TWEAK_NAME = FetchMyLyrics
-FetchMyLyrics_FILES = src/FMLHook.xm \
-					  src/FMLController.m \
-					  src/FMLLyricsWrapper.m \
-					  src/NSRegularExpression+Extra.m \
-					  src/NSObject+InstanceVariable.m
-FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit CoreGraphics QuartzCore
+FetchMyLyrics_FILES = _tweak/FMLHook.xm \
+					  _tweak/FMLController.m \
+					  _tweak/FMLLyricsWrapper.m \
+					  _common/NSObject+InstanceVariable.m
+FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI
-FetchMyLyrics_CFLAGS = -I./src -I/usr/include/objc
+FetchMyLyrics_CFLAGS = -I./_tweak -I./_common -I/usr/include/objc
 FetchMyLyrics_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 BUNDLE_NAME = FMLLyricsWikiOperation FMLAZLyricsOperation
-FMLLyricsWikiOperation_FILES = src/FMLLyricsWikiOperation.m
+FMLLyricsWikiOperation_FILES = _bundles/FMLLyricsWikiOperation/FMLLyricsWikiOperation.m \
+							   _common/NSRegularExpression+Extra.m
 FMLLyricsWikiOperation_FRAMEWORKS = Foundation
-FMLLyricsWikiOperation_CFLAGS = -I./src
+FMLLyricsWikiOperation_CFLAGS = -I./_bundles/FMLLyricsWikiOperation -I./_common
 FMLLyricsWikiOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
-FMLAZLyricsOperation_FILES = src/FMLAZLyricsOperation.m
+FMLAZLyricsOperation_FILES = _bundles/FMLAZLyricsOperation/FMLAZLyricsOperation.m
 FMLAZLyricsOperation_FRAMEWORKS = Foundation
-FMLAZLyricsOperation_CFLAGS = -I./src
+FMLAZLyricsOperation_CFLAGS = -I./_bundles/FMLAZLyricsOperation -I./_common
 FMLAZLyricsOperation_INSTALL_PATH = /Library/FetchMyLyrics/LyricsOperations/
 
 TARGET_IPHONEOS_DEPLOYMENT_VERSION = 5.0
