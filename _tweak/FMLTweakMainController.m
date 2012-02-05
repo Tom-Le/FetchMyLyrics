@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLController.m
+ * FMLTweakMainController.m
  * FetchMyLyrics
  *
  * Warning: God object.
@@ -11,7 +11,7 @@
 
 #import <objc-runtime.h>
 
-#import "FMLController.h"
+#import "FMLTweakMainController.h"
 #import "FMLCommon.h"
 #import "NSObject+InstanceVariable.h"
 
@@ -21,7 +21,7 @@
 NSString * const kFMLLyricsStorageFolder = @"~/Library/FetchMyLyrics/";
 NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";
 
-@implementation FMLController
+@implementation FMLTweakMainController
 
 #pragma mark Now Playing
 
@@ -67,7 +67,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
             if ((title == nil) || (artist == nil))
                 return;
 
-            // If FMLController already has lyrics for the song, return.
+            // If FMLTweakMainController already has lyrics for the song, return.
             @synchronized(_lyricsWrappers)
             {
                 for (FMLLyricsWrapper *lw in _lyricsWrappers)
@@ -265,7 +265,7 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
  */
 + (id)sharedController
 {
-    static FMLController *singleton;
+    static FMLTweakMainController *singleton;
 
     @synchronized(self)
     {

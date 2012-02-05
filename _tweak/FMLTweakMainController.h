@@ -1,5 +1,5 @@
 /*******************************************************************************
- * FMLController.h
+ * FMLTweakMainController.h
  * FetchMyLyrics
  *
  * Copyright (C) 2011 by Le Son.
@@ -14,7 +14,7 @@ extern NSString * const kFMLLyricsOperationsFolder;
 
 @class FMLLyricsWrapper, FMLOperation;
 
-@interface FMLController : NSObject {
+@interface FMLTweakMainController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;
     NSMutableArray *_lyricsWrappers;
 

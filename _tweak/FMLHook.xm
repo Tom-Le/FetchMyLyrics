@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <objc-runtime.h>
 
-#import "FMLController.h"
+#import "FMLTweakMainController.h"
 #import "FMLCommon.h"
 #import "NSObject+InstanceVariable.h"
 
@@ -20,7 +20,7 @@
 
 /*
  * Hook: - [MediaApplication application:didFinishLaunchingWithOptions:]
- * Goal: Initialize an instance of FMLController to be used later.
+ * Goal: Initialize an instance of FMLTweakMainController to be used later.
  *       Will delegate most of the initialization to another thread
  *       to avoid locking the UI up.
  */
@@ -29,7 +29,7 @@
     // I don't even know why this method's return type is BOOL,
     // what a load of BOOLcrap.
 
-    [[FMLController sharedController] setup];
+    [[FMLTweakMainController sharedController] setup];
 
     return %orig;
 }
@@ -42,7 +42,7 @@
 - (void)applicationDidBecomeActive:(id)arg1
 {
     %orig;
-    [[FMLController sharedController] reloadDisplayableTextViewForSongTitle:nil artist:nil];
+    [[FMLTweakMainController sharedController] reloadDisplayableTextViewForSongTitle:nil artist:nil];
 }
 
 %end // %hook MediaApplication
@@ -51,14 +51,14 @@
 
 /*
  * Hook  : - [MPQueueFeeder itemForIndex:]
- * Goal  : Hijack this method to notify FMLController of upcoming now playing items
+ * Goal  : Hijack this method to notify FMLTweakMainController of upcoming now playing items
  *         so that the controller can start lyrics fetching operations.
  * Caveat: Still not sure if this is the right place to hook.
  */
 - (id)itemForIndex:(unsigned int)index
 {
     id item = %orig;
-    [[FMLController sharedController] handleSongWithNowPlayingItem:item];
+    [[FMLTweakMainController sharedController] handleSongWithNowPlayingItem:item];
 
     return item;
 }
@@ -88,7 +88,7 @@
         if (![mediaItem respondsToSelector:@selector(valueForProperty:)]) return nil;
         NSString *title = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"title");
         NSString *artist = (NSString *)objc_msgSend(mediaItem, @selector(valueForProperty:), @"artist");
-        return [[FMLController sharedController] lyricsForSongWithTitle:title artist:artist];
+        return [[FMLTweakMainController sharedController] lyricsForSongWithTitle:title artist:artist];
     }
 
     return lyrics;
