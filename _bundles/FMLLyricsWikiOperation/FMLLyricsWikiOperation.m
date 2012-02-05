@@ -200,7 +200,8 @@
 
                 // LyricsWiki aren't licensed to display every song in the world
                 // but they still list a short excerpt, with a disclaimer
-                if ([lyrics rangeOfString:@"Unfortunately, we are not licensed to display the full lyrics for this song at the moment"].location == NSNotFound)
+                if ([lyrics rangeOfString:@"Unfortunately, we are not licensed to display the full lyrics for this song at the moment"].location == NSNotFound &&
+                    [lyrics rangeOfString:@"Unfortunately, due to licensing restrictions from some of the major music publishers"].location == NSNotFound)
                 {
                     self.lyrics = lyrics;
                 }
