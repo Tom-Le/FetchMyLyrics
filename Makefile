@@ -13,7 +13,7 @@ THEOS_DEVICE_IP   = localhost
 TWEAK_NAME = FetchMyLyrics
 FetchMyLyrics_FILES = _tweak/FMLHook.xm \
 					  _tweak/FMLTweakMainController.m \
-					  _tweak/FMLLyricsWrapper.m \
+					  _common/FMLLyricsManager.m \
 					  _common/NSObject+InstanceVariable.m
 FetchMyLyrics_FRAMEWORKS = Foundation CoreFoundation MediaPlayer UIKit
 FetchMyLyrics_PRIVATE_FRAMEWORKS = iPodUI

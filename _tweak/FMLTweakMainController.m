@@ -9,18 +9,16 @@
  *     https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
  ******************************************************************************/
 
-#import <objc-runtime.h>
-
 #import "FMLTweakMainController.h"
 
-#import "FMLLyricsWrapper.h"
-#import "FMLOperation-Protocol.h"
-
+#import <FMLLyricsManager.h>
+#import <FMLOperation-Protocol.h>
 #import <FMLCommon.h>
 #import <NSObject+InstanceVariable.h>
 
+#import <objc-runtime.h>
+
 NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";
-NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/";
 
 @implementation FMLTweakMainController
 
@@ -68,13 +66,8 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
             if ((title == nil) || (artist == nil))
                 return;
 
-            // If FMLTweakMainController already has lyrics for the song, return.
-            @synchronized(_lyricsWrappers)
-            {
-                for (FMLLyricsWrapper *lw in _lyricsWrappers)
-                    if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist])
-                        return;
-            }
+            // If we already have lyrics for this song, return.
+            if ([_lyricsManager lyricsForSong:title artist:artist] != nil) return;
 
             // If a task is already running for the song requested, return.
             @synchronized(_lyricsFetchOperationQueue)
@@ -138,14 +131,7 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
     BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"FMLEnabled"];
     if (_ready && enabled)
     {
-        @synchronized(_lyricsWrappers)
-        {
-            for (FMLLyricsWrapper *lw in _lyricsWrappers)
-                if ([lw.title isEqualToString:title] && [lw.artist isEqualToString:artist]) 
-                {
-                    return lw.lyrics; 
-                }
-        }
+        return [_lyricsManager lyricsForSong:title artist:artist];
     }
 
     // Found nothing or wasn't ready
@@ -159,10 +145,7 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
 {
     if (_ready && [[notification name] isEqualToString:@"FMLOperationDidReturnWithLyrics"])
     {
-        NSString *title = [[notification userInfo] objectForKey:@"title"];
-        NSString *artist = [[notification userInfo] objectForKey:@"artist"];
-        NSString *lyrics = [[notification userInfo] objectForKey:@"lyrics"];
-
+        /*
         BOOL duplicate = NO;
         NSUInteger duplicateIndex;
         for (FMLLyricsWrapper *lw in _lyricsWrappers)
@@ -184,6 +167,12 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
             [_lyricsWrappers replaceObjectAtIndex:duplicateIndex withObject:wrapper];
 
         [self writeToLyricsStorageFile];
+        */
+
+        NSString *title = [[notification userInfo] objectForKey:@"title"];
+        NSString *artist = [[notification userInfo] objectForKey:@"artist"];
+        NSString *lyrics = [[notification userInfo] objectForKey:@"lyrics"];
+        [_lyricsManager addLyrics:lyrics forSong:title artist:artist];
 
         // Request the app update its lyrics display, but only if now playing song is the song whose lyrics was just fetched
         // and only if the tweak is enabled
@@ -195,44 +184,6 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
             }];
         }
     }
-}
-
-/*
- * Functions: Read/write from/to lyrics storage file.
- */
-- (void)readFromLyricsStorageFile
-{
-    NSMutableArray *storedWrappers;
-    @try
-    {
-        NSString *path = [[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath];
-        storedWrappers = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    }
-    @catch (id e)
-    {
-        DebugLog(@"DUN DUN DUN READ EXCEPTION: %@", e);
-        storedWrappers = nil;
-    }
-
-    if (storedWrappers)
-    {
-        if (_lyricsWrappers)
-            [_lyricsWrappers release];
-        _lyricsWrappers = [(NSArray *)storedWrappers mutableCopy];
-    }
-}
-
-- (void)writeToLyricsStorageFile
-{
-    NSFileManager *manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:[kFMLLyricsStorageFolder stringByExpandingTildeInPath]])
-        [manager createDirectoryAtPath:[kFMLLyricsStorageFolder stringByExpandingTildeInPath]
-           withIntermediateDirectories:YES
-                            attributes:nil
-                                 error:nil];
-
-    [NSKeyedArchiver archiveRootObject:_lyricsWrappers
-                                toFile:[[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
 }
 
 #pragma mark UIApplication notifications
@@ -250,8 +201,8 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
                                                                             @"FMLLyricsWikiOperation", @"FMLOperation", nil];
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
-        // Read saved lyrics
-        [self readFromLyricsStorageFile];
+        // Command lyrics manager to read all saved lyrics
+        [_lyricsManager readFromLyricsStorageFile];
 
         // Register for notifications from future lyrics operations
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -272,6 +223,19 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self reloadDisplayableTextViewForSongTitle:nil artist:nil];
+}
+
+/*
+ * Functions: Save lyrics to disk when application is suspended or terminated.
+ */
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [_lyricsManager writeToLyricsStorageFile];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    [_lyricsManager writeToLyricsStorageFile];
 }
 
 #pragma mark Singleton
@@ -298,7 +262,7 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
         _lyricsFetchOperationQueue = [[NSOperationQueue alloc] init];
         [_lyricsFetchOperationQueue setName:@"no.domain.FetchMyLyrics.LyricsFetchOperations"];
 
-        _lyricsWrappers = [[NSMutableArray alloc] init];
+        _lyricsManager = [[FMLLyricsManager alloc] init];
 
         // Register for UIApp notifications
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -307,8 +271,16 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
                               name:@"UIApplicationDidFinishLaunchingNotification"
                             object:nil];
         [defaultCenter addObserver:self
-                          selector:@selector(applicationWillEnterForeground:)
+                          selector:@selector(applicationDidBecomeActive:)
                               name:@"UIApplicationDidBecomeActiveNotification"
+                            object:nil];
+        [defaultCenter addObserver:self
+                          selector:@selector(applicationDidEnterBackground:)
+                              name:@"UIApplicationDidEnterBackgroundNotification"
+                            object:nil];
+        [defaultCenter addObserver:self
+                          selector:@selector(applicationWillTerminate:)
+                              name:@"UIApplicationWillTerminateNotification"
                             object:nil];
 
         _ready = NO;
@@ -351,7 +323,7 @@ NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/"
 - (void)dealloc
 {
     [_lyricsFetchOperationQueue release];
-    [_lyricsWrappers release];
+    [_lyricsManager release];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     

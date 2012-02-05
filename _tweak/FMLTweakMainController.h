@@ -9,13 +9,13 @@
 
 #import <UIKit/UIKit.h>
 
-extern NSString * const kFMLLyricsStorageFolder;
+extern NSString * const kFMLLyricsOperationsFolder;
 
-@class FMLLyricsWrapper, FMLOperation;
+@class FMLLyricsManager, FMLOperation;
 
 @interface FMLTweakMainController : NSObject {
     NSOperationQueue *_lyricsFetchOperationQueue;
-    NSMutableArray *_lyricsWrappers;
+    FMLLyricsManager *_lyricsManager;
 
     BOOL _ready;
 }
@@ -27,12 +27,11 @@ extern NSString * const kFMLLyricsStorageFolder;
                               artist:(NSString *)artist;
 - (void)operationDidReturnWithLyrics:(NSNotification *)notification;
 
-- (void)readFromLyricsStorageFile;
-- (void)writeToLyricsStorageFile;
-
 - (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
+- (void)applicationDidEnterBackground:(NSNotification *)notification;
+- (void)applicationWillTerminate:(NSNotification *)notification;
 
 @end
