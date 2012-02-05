@@ -19,8 +19,8 @@
 #import <FMLCommon.h>
 #import <NSObject+InstanceVariable.h>
 
-NSString * const kFMLLyricsStorageFolder = @"~/Library/FetchMyLyrics/";
 NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";
+NSString * const kFMLLyricsStorageFolder = @"/var/mobile/Library/FetchMyLyrics/";
 
 @implementation FMLTweakMainController
 
@@ -235,22 +235,25 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
                                 toFile:[[kFMLLyricsStorageFolder stringByAppendingString:@"storage"] stringByExpandingTildeInPath]];
 }
 
-#pragma mark Setup
+#pragma mark UIApplication notifications
 /*
  * Function: Setup the singleton.
  *           Load the saved lyrics, if there's any. 
  * Note    : Return ASAP or it will take forever to start up.
  */
-- (void)setup
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     dispatch_queue_t global_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(global_queue, ^{
+        // Register defaults
         NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"FMLEnabled",
                                                                             @"FMLLyricsWikiOperation", @"FMLOperation", nil];
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
+        // Read saved lyrics
         [self readFromLyricsStorageFile];
 
+        // Register for notifications from future lyrics operations
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(operationDidReturnWithLyrics:)
                                                      name:@"FMLOperationDidReturnWithLyrics"
@@ -258,6 +261,17 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
 
         _ready = YES;
     });
+}
+
+/*
+ * Function: Reload displayable text view when app enters foreground.
+ * Note    : Quick hack for when user changes prefs in Settings app.
+ *           Will be handled more smoothly in the future if/when we have a separate app for
+ *           managing preferences instead of relying on Settings app.
+ */
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self reloadDisplayableTextViewForSongTitle:nil artist:nil];
 }
 
 #pragma mark Singleton
@@ -285,6 +299,18 @@ NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOpe
         [_lyricsFetchOperationQueue setName:@"no.domain.FetchMyLyrics.LyricsFetchOperations"];
 
         _lyricsWrappers = [[NSMutableArray alloc] init];
+
+        // Register for UIApp notifications
+        NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+        [defaultCenter addObserver:self
+                          selector:@selector(applicationDidFinishLaunching:)
+                              name:@"UIApplicationDidFinishLaunchingNotification"
+                            object:nil];
+        [defaultCenter addObserver:self
+                          selector:@selector(applicationWillEnterForeground:)
+                              name:@"UIApplicationDidBecomeActiveNotification"
+                            object:nil];
+
         _ready = NO;
     }
     return self;

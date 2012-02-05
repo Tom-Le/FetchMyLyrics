@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 
 extern NSString * const kFMLLyricsStorageFolder;
-extern NSString * const kFMLLyricsOperationsFolder;
 
 @class FMLLyricsWrapper, FMLOperation;
 
@@ -20,6 +19,8 @@ extern NSString * const kFMLLyricsOperationsFolder;
 
     BOOL _ready;
 }
+
++ (id)sharedController;
 
 - (void)handleSongWithNowPlayingItem:(id)item;
 - (NSString *)lyricsForSongWithTitle:(NSString *)title
@@ -31,6 +32,7 @@ extern NSString * const kFMLLyricsOperationsFolder;
 
 - (void)reloadDisplayableTextViewForSongTitle:(NSString *)title artist:(NSString *)artist;
 
-+ (id)sharedController;
-- (void)setup;
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+- (void)applicationDidBecomeActive:(NSNotification *)notification;
+
 @end

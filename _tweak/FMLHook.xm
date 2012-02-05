@@ -16,37 +16,6 @@
 
 %group iOS5
 
-%hook MediaApplication
-
-/*
- * Hook: - [MediaApplication application:didFinishLaunchingWithOptions:]
- * Goal: Initialize an instance of FMLTweakMainController to be used later.
- *       Will delegate most of the initialization to another thread
- *       to avoid locking the UI up.
- */
-- (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
-{
-    // I don't even know why this method's return type is BOOL,
-    // what a load of BOOLcrap.
-
-    [[FMLTweakMainController sharedController] setup];
-
-    return %orig;
-}
-
-/*
- * Hook: - [MediaApplication applicationDidBecomeActive:]
- * Goal: Reload the displayable text view every time the application
- *       becomes active, in case the user disables FML via Settings.app.
- */
-- (void)applicationDidBecomeActive:(id)arg1
-{
-    %orig;
-    [[FMLTweakMainController sharedController] reloadDisplayableTextViewForSongTitle:nil artist:nil];
-}
-
-%end // %hook MediaApplication
-
 %hook MPQueueFeeder
 
 /*
