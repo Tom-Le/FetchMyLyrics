@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FMLOperation.h"
+#import <FMLOperation.h>
 
 @interface FMLLyricsWikiOperation : NSOperation <FMLOperation> { 
     NSAutoreleasePool *_pool;

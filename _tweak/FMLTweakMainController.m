@@ -12,11 +12,12 @@
 #import <objc-runtime.h>
 
 #import "FMLTweakMainController.h"
-#import "FMLCommon.h"
-#import "NSObject+InstanceVariable.h"
 
 #import "FMLLyricsWrapper.h"
-#import "FMLOperation.h"
+#import "FMLOperation-Protocol.h"
+
+#import <FMLCommon.h>
+#import <NSObject+InstanceVariable.h>
 
 NSString * const kFMLLyricsStorageFolder = @"~/Library/FetchMyLyrics/";
 NSString * const kFMLLyricsOperationsFolder = @"/Library/FetchMyLyrics/LyricsOperations/";

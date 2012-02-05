@@ -9,8 +9,8 @@
 
 #import "FMLLyricsWikiOperation.h"
 
-#import "NSRegularExpression+Extra.h"
-#import "FMLCommon.h"
+#import <NSRegularExpression+Extra.h>
+#import <FMLCommon.h>
 
 @implementation FMLLyricsWikiOperation
 
