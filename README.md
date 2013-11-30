@@ -13,8 +13,7 @@ iDevice.
 creepy. Proper settings page would be nice, too.
 2. Write back to iPod's library. Right now lyrics is stored under
 `/var/mobile/Library/FetchMyLyrics/storage` (archived NSMutableArray).
-Ultimate goal is to have the lyrics synced back to iTunes. I have no
-idea how to accomplish this though. Halp?
+Ultimate goal is to have the lyrics synced back to iTunes.
 
 ♪
 
@@ -31,12 +30,5 @@ https://raw.github.com/precocity/FetchMyLyrics/master/LICENSE
 
 [theos-link]:[https://github.com/DHowett/theos]
 [class-dump-link]:[http://www.codethecode.com/projects/class-dump/]
-
-In short, awesome people.
-
-♪
-
-## About
-Name is Tom. Is a cat in human form.
 
 ♫
